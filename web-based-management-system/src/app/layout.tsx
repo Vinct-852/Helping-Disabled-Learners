@@ -10,6 +10,15 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 
 import NavBar from '@/app/components/NavBar';
+import SideMenu from '@/app/(dashboard)/components/SideMenu';
+
+import {
+  chartsCustomizations,
+  dataGridCustomizations,
+  datePickersCustomizations,
+  treeViewCustomizations,
+} from '@/app/(dashboard)/theme/customizations';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +35,13 @@ export const metadata: Metadata = {
   description: "",
 };
 
+const xThemeComponents = {
+  ...chartsCustomizations,
+  ...dataGridCustomizations,
+  ...datePickersCustomizations,
+  ...treeViewCustomizations,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,22 +53,10 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <AppTheme>
             <CssBaseline enableColorScheme/>
-            <NavBar/>
-            <div style={{ flexGrow: 1, marginTop: '100px' }}> {/* Add margin here */}
-              <Container maxWidth="lg">
-                <Box
-                  sx={{
-                    my: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  {children}
-                </Box>
-              </Container>
-            </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <SideMenu />
+              {children}
+            </Box>
           </AppTheme>
         </AppRouterCacheProvider>
       </body>
