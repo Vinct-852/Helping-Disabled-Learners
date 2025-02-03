@@ -1,0 +1,22 @@
+{
+  "studentId": "12345", 
+  "quizId": "1", 
+  "date": "2025-01-24T13:00:00+08:00", 
+  "answers": [
+    {
+      "questionId": 1, 
+      "selectedOptionId": 3,
+      "isCorrect": true
+    },
+    {
+      "questionId": 2,
+      "selectedOptionId": 2,
+      "isCorrect": false
+    },
+    {
+      "questionId": 3,
+      "selectedOptionId": 1,
+      "isCorrect": true
+    }
+  ]
+}

@@ -75,6 +75,7 @@ export default function MainGrid() {
           <PageViewsBarChart />
         </Grid>
       </Grid>
+      
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Details
       </Typography>

@@ -18,8 +18,8 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/' },
   { text: 'Analytics', icon: <AnalyticsRoundedIcon />, path: '/analytics' },
-  { text: 'Class', icon: <PeopleRoundedIcon />, path: '/class' },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon />, path: '/tasks' },
+  { text: 'Course', icon: <PeopleRoundedIcon />, path: '/course' },
+  { text: 'Quiz', icon: <AssignmentRoundedIcon />, path: '/quiz' },
 ];
 
 const secondaryListItems = [

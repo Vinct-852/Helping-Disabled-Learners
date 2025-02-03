@@ -18,6 +18,8 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '@/app/(dashboard)/theme/customizations';
+import { Stack } from "@mui/material";
+import Header from "./(dashboard)/components/Header";
 
 
 const geistSans = Geist({
@@ -55,7 +57,18 @@ export default function RootLayout({
             <CssBaseline enableColorScheme/>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <SideMenu />
-              {children}
+              <Stack
+                spacing={2}
+                sx={{
+                  alignItems: 'center',
+                  mx: 3,
+                  pb: 5,
+                  mt: { xs: 8, md: 0 }, 
+                }}
+              >
+                <Header />
+                {children}
+              </Stack>
             </Box>
           </AppTheme>
         </AppRouterCacheProvider>
