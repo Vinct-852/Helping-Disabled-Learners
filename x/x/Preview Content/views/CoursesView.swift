@@ -28,11 +28,11 @@ struct CoursesView: View {
                         ]
                         
                         LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(viewModel.courses.indices, id: \.self) { index in
+                            ForEach(viewModel.courses, id: \.self) { course in
                                 NavigationLink {
-                                    SingleCourseView(courseIndex: index)
+                                    SingleCourseView(courseId: course._id)
                                 } label: {
-                                    CourseCardView()
+                                    CourseCardView(course: course)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 .buttonBorderShape(.roundedRectangle(radius: 0))

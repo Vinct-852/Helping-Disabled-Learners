@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Course: Decodable, Identifiable {
-    let id: String
+struct Course: Decodable, Hashable {
+    let _id: String
     let courseTitle: String
     let courseCode: String
     let description: String
@@ -19,7 +19,7 @@ struct Course: Decodable, Identifiable {
 struct CourseMockData {
     
     static let sampleCourse = Course(
-        id: "0001",
+        _id: "0001",
         courseTitle: "Introduction to Science",
         courseCode: "S101",
         description: "This course provides an introduction to the fundamentals of science.",

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SingleCourseView: View {
-    var courseIndex: Int
+    var courseId: String
     var body: some View {
         NavigationStack{
             ScrollView{
@@ -94,5 +94,5 @@ struct SingleCourseView: View {
 }
 
 #Preview {
-    SingleCourseView(courseIndex: 1)
+    SingleCourseView(courseId: "60c72b2f9b1d4c001f8e4e3e")
 }

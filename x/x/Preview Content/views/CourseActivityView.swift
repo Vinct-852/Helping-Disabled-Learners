@@ -41,7 +41,7 @@ struct CourseActivityView: View {
                             .font(.system(size: 36, weight: .bold))
                         VStack{
                             Text("This quiz requires you to carefully read each question and select the single correct answer from the provided options.")
-                                .font(.system(size: 24, weight: .regular))
+                                .font(.system(size: 28, weight: .regular))
                             VStack(alignment: .leading, spacing: 10) {
                                 Text("1. There are no penalties for incorrect answers unless otherwise specified.")
                                     .font(.system(size: 28))

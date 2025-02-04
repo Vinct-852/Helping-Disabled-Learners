@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CourseCardView: View {
+    let course: Course
     var body: some View {
         VStack{
             AsyncImage(url: URL(string: "https://res.cloudinary.com/nowo-ltd/image/upload/v1738138068/visionpropro/selective-focus-face-young-asian-boy-girl-smile-having-fun-doing-science-experiment-laboratory-classroom-215712293_x4xezg.webp")) { image in
@@ -19,11 +20,11 @@ struct CourseCardView: View {
                         .aspectRatio(16/9, contentMode: .fit)
                 }
             VStack {
-                Text("S101")
+                Text(course.courseCode)
                     .foregroundColor(.white)
                     .font(.system(size: 24, weight: .regular))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Introduction to Science")
+                Text(course.courseTitle)
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)

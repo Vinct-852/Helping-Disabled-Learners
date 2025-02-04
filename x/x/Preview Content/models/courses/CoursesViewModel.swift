@@ -20,13 +20,12 @@ class CoursesViewModel: ObservableObject {
         error = nil
         
         do {
-            // Replace with your actual API endpoint
-//            let courses: [Course] = try await networkManager.get(
-//                url: URL(string: "https://api.example.com/courses"),
-//                headers: ["Authorization": "Bearer YOUR_TOKEN"]
-//            )
-//            self.courses = courses
-            self.courses = CourseMockData.courses
+//             Replace with your actual API endpoint
+            let courses: [Course] = try await networkManager.get(
+                url: URL(string: "http://localhost:3000/api/course")
+            )
+            self.courses = courses
+//            self.courses = CourseMockData.courses
         } catch let networkError as NetworkError {
             self.error = networkError
         } catch {
