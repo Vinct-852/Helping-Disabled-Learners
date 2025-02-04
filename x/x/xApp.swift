@@ -17,6 +17,8 @@ struct xApp: App {
             ContentView()
                 .environment(appModel)
         }
+        .defaultSize(CGSize(width: 1728, height: 1117))
+        .windowResizability(.contentSize)
 
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()

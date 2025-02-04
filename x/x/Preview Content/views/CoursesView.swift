@@ -8,11 +8,19 @@
 import SwiftUI
 
 struct CoursesView: View {
+    @StateObject private var viewModel = CoursesViewModel()
+    
     var body: some View {
-        NavigationStack{
+        GeometryReader{ geometry in
             ScrollView{
-                VStack {                    
-                    VStack(spacing: 20) {
+                VStack {
+                    if viewModel.isLoading {
+                        ProgressView("Loading...")
+                    } else if let error = viewModel.error {
+                        ErrorView(error: error, retryAction: {
+                            Task { await viewModel.fetchAllCourses() }
+                        })
+                    } else {
                         let columns = [
                             GridItem(.flexible(), spacing: 32),
                             GridItem(.flexible(), spacing: 32),
@@ -20,8 +28,10 @@ struct CoursesView: View {
                         ]
                         
                         LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(0..<9) { index in
-                                NavigationLink{SingleCourseView(courseIndex: index)} label: {
+                            ForEach(viewModel.courses.indices, id: \.self) { index in
+                                NavigationLink {
+                                    SingleCourseView(courseIndex: index)
+                                } label: {
                                     CourseCardView()
                                 }
                                 .buttonStyle(PlainButtonStyle())
@@ -29,18 +39,24 @@ struct CoursesView: View {
                             }
                         }
                         .padding()
+                        Spacer()
                     }
-                    Spacer()
                     
                 }
                 .padding(.horizontal, 64)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height, maxHeight: .infinity)
             }
         }
         .navigationTitle("Courses")
+        .task {
+            await viewModel.fetchAllCourses()
+        }
     }
 }
 
 #Preview {
-    CoursesView()
+    NavigationStack{
+        CoursesView()
+    }
+    
 }

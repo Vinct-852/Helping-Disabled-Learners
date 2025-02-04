@@ -27,5 +27,5 @@ struct CourseMockData {
         immersiveSets: ["String"]
     )
     
-    static let courses = [sampleCourse, sampleCourse, sampleCourse]
+    static let courses = [sampleCourse, sampleCourse, sampleCourse, sampleCourse, sampleCourse, sampleCourse, sampleCourse, sampleCourse, sampleCourse]
 }

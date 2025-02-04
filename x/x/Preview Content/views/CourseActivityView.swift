@@ -10,11 +10,14 @@ import WebKit
 
 struct CourseActivityView: View {
     var body: some View {
-        NavigationStack{
-            GeometryReader { geometry in
+        GeometryReader { geometry in
+            ScrollView{
                 HStack(alignment: .top, spacing: 24){
                     VStack(alignment: .leading, spacing: 8){
                         VideoPlayerView()
+                            .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fill)
+                            .frame(maxWidth: .infinity)
+                            .cornerRadius(24)
                         VStack(alignment: .leading, spacing: 12){
                             Text("Interactive Proofs and the Sum-Check Protocol")
                                 .font(.system(size: 40, weight: .bold))
@@ -38,11 +41,26 @@ struct CourseActivityView: View {
                             .font(.system(size: 36, weight: .bold))
                         VStack{
                             Text("This quiz requires you to carefully read each question and select the single correct answer from the provided options.")
-                                .font(.system(size: 28, weight: .regular))
+                                .font(.system(size: 24, weight: .regular))
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("1. There are no penalties for incorrect answers unless otherwise specified.")
+                                    .font(.system(size: 28))
+                                    .padding(.bottom, 5)
+                                
+                                Text("2. Some quizzes may have a time limit, so ensure you answer promptly if time is restricted.")
+                                    .font(.system(size: 28))
+                                    .padding(.bottom, 5)
+                                
+                                Text("3. Once all questions are completed, your final score will be displayed.")
+                                    .font(.system(size: 28))
+                                    .padding(.bottom, 5)
+                            }
+                            .padding()
                         }
                         
                         NavigationLink {QuizView()} label: {
                             Text("Start Quiz")
+                                .frame(maxWidth: .infinity)
                                 .font(.system(size: 24, weight: .bold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 96)
@@ -67,13 +85,16 @@ struct CourseActivityView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(32)
             }
-            
         }
         .navigationTitle("Course Activity")
+        
     }
     
 }
 
 #Preview {
-    CourseActivityView()
+    NavigationStack{
+        CourseActivityView()
+    }
+    
 }

@@ -18,13 +18,13 @@ struct SingleCourseView: View {
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill) // Use .fill to cover the area
-                                .frame(height: 400)
+                                .frame(height: 300)
                                 .clipped() // Clip the image to the frame
                                 .cornerRadius(24)
                         } placeholder: {
                             Color.gray
                                 .aspectRatio(16/9, contentMode: .fit) // Use a common aspect ratio like 16:9
-                                .frame(height: 400)
+                                .frame(height: 300)
                                 .cornerRadius(24)
                         }
                         
@@ -36,7 +36,7 @@ struct SingleCourseView: View {
                         VStack(spacing: 4) {
                             Spacer()
                             Text("Introduction to Science")
-                                .font(.system(size: 32, weight:.bold))
+                                .font(.system(size: 48, weight:.bold))
                                 .foregroundColor(.white)
                                 .padding(.bottom, 4)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -48,14 +48,14 @@ struct SingleCourseView: View {
                         }
                         .padding(32)
                     }
-                    .frame(height: 400) // Ensure the ZStack has a consistent height
+                    .frame(height: 300) // Ensure the ZStack has a consistent height
                     .cornerRadius(24)
                     
                     VStack{
                         Text("Course Activities")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.white)
-                            .font(.system(size: 24, weight: .medium))
+                            .font(.system(size: 32, weight: .bold))
                         
                         VStack(spacing: 20) {
                             let columns = [
