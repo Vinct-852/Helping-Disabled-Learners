@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct CourseActivity: Codable, Identifiable {
-    let id: String
+struct CourseActivity: Codable {
+    let _id: String
     let title: String
-    let duration: Int
+    let video_url: String
+    let quiz: String
+    let topics: [String]
 }
 
