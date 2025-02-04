@@ -30,7 +30,7 @@ struct CoursesView: View {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.courses, id: \.self) { course in
                                 NavigationLink {
-                                    SingleCourseView(courseId: course._id)
+                                    SingleCourseView(courseCode: course.courseCode)
                                 } label: {
                                     CourseCardView(course: course)
                                 }

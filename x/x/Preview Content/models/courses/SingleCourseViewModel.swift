@@ -14,14 +14,14 @@ class CourseDetailsViewModel: ObservableObject {
     
     private let networkManager = NetworkManager.shared
     
-    func fetchCourse(byId courseId: String) async {
+    func fetchCourse(byCourseCode courseCode: String) async {
         isLoading = true
         error = nil
         
         do {
             // Replace with your actual API endpoint
             let course: Course = try await networkManager.get(
-                url: URL(string: "https://api.example.com/courses/\(courseId)"),
+                url: URL(string: "http://localhost:3000/api/course/?courseCode=\(courseCode)"),
                 headers: ["Authorization": "Bearer YOUR_TOKEN"]
             )
             self.course = course

@@ -76,12 +76,16 @@ final class NetworkManager {
                 throw NetworkError.statusCode(httpResponse.statusCode)
             }
             
+//            // Debugging: Print response data
+//            print("Response Data: \(String(data: data, encoding: .utf8) ?? "No Data")")
+            
             let decodedData = try JSONDecoder().decode(T.self, from: data)
             return decodedData
             
         } catch let error as NetworkError {
             throw error
         } catch {
+            print(error)
             throw NetworkError.unknown(error)
         }
     }
