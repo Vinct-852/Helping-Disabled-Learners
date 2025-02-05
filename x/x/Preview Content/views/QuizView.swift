@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct QuizView: View {
+    let quizId: String;
     // Define the questions and answers
     let questions = [
         ("Which planet in the Solar System has the largest volcano?", ["Mercury", "Venus", "Earth", "Mars"], "D"),
@@ -33,7 +34,7 @@ struct QuizView: View {
                     Text(questions[currentQuestionIndex].0)
                         .font(.largeTitle)
                         .foregroundColor(.white)
-                        .padding(40)
+                        .padding(48)
                         .overlay(
                             RoundedRectangle(cornerRadius: 64)
                                 .stroke(.white, lineWidth: 2)
@@ -73,5 +74,5 @@ struct QuizView: View {
 }
 
 #Preview {
-    QuizView()
+    QuizView(quizId: "6798e34e901eefe0e8cbebff")
 }

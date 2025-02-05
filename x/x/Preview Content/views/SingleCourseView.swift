@@ -114,7 +114,7 @@ struct CourseActivitiesView: View {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(course.immersiveSets, id: \.self) { activityId in
                     NavigationLink {
-                        CourseActivityView()
+                        CourseActivityView(activityId: activityId)
                     } label: {
                         CourseActivityCardView(activityId: activityId)
                     }

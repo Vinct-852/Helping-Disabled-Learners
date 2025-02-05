@@ -18,7 +18,8 @@ struct QuestionFooterView: View {
                         currentQuestionIndex -= 1
                     }) {
                         Text("Back")
-                            .padding(.horizontal, 48)
+                            .font(.system(size: 24, weight: .bold))
+                            .padding(.horizontal, 96)
                             .padding(.vertical, 20)
                             .background(Color.black)
                             .foregroundColor(.white)
@@ -38,14 +39,16 @@ struct QuestionFooterView: View {
             }) {
                 currentQuestionIndex < count - 1 ?
                 Text("Next")
-                    .padding(.horizontal, 48)
+                    .font(.system(size: 24, weight: .bold))
+                    .padding(.horizontal, 96)
                     .padding(.vertical, 20)
                     .background(Color.black)
                     .foregroundColor(.white)
                     .cornerRadius(64)
                 :
                 Text("Submit")
-                    .padding(.horizontal, 48)
+                    .font(.system(size: 24, weight: .bold))
+                    .padding(.horizontal, 96)
                     .padding(.vertical, 20)
                     .background(Color("darkGreen"))
                     .foregroundColor(.white)

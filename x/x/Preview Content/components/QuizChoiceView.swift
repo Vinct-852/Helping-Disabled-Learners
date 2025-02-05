@@ -26,7 +26,7 @@ struct QuizChoiceView: View {
                             .fill(Color.white)
                     )
                 Text(text)
-//                    .foregroundColor(selectedAnswer == index ? .white: .black)
+                    .font(.system(size: 28))
                     
             }
             .frame(maxWidth: .infinity, alignment: .leading) // Align text to the left
