@@ -7,69 +7,151 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct QuizView: View {
-    let quizId: String;
-    // Define the questions and answers
-    let questions = [
-        ("Which planet in the Solar System has the largest volcano?", ["Mercury", "Venus", "Earth", "Mars"], "D"),
-        ("What is the primary reason for the phases of the Moon as observed from Earth?", ["The Moon's rotation on its axis", "The Earth's rotation on its axis", "The relative positions of the Sun, Earth, and Moon", "Changes in the Moon's distance from the Earth"], "C"),
-        ("Which of the following is classified as a dwarf planet in our Solar System?", ["Europa", "Titan", "Ceres", "Ganymede"], "C"),
-        ("What is the name of the boundary around a black hole beyond which nothing can escape?", ["Event horizon", "Singularity", "Accretion disk", "Schwarzschild radius"], "A"),
-        ("Which planet has the strongest magnetic field in the Solar System?", ["Earth", "Saturn", "Jupiter", "Uranus"], "C"),
-        ("What is the approximate age of the Solar System?", ["13.8 billion years", "10 billion years", "4.6 billion years", "1 billion years"], "C"),
-        ("Which of the following best describes a light-year?", ["The time it takes for light to travel one year in space", "The distance light travels in one year", "The time it takes for the Sun's light to reach Earth", "The distance between the Earth and the nearest star"], "B"),
-        ("Which of these stars is the closest to Earth?", ["Betelgeuse", "Proxima Centauri", "Sirius", "Vega"], "B"),
-        ("What is the primary component of the Sun?", ["Oxygen", "Helium", "Hydrogen", "Carbon"], "C"),
-        ("What causes a solar eclipse?", ["The Moon passing between the Earth and the Sun", "The Earth passing between the Moon and the Sun", "The Moon passing through the Earth's shadow", "The Sun passing directly behind the Earth"], "A")
-    ]
+    @StateObject private var viewModel = QuizViewModel()
+    let quizId: String
     
     @State private var currentQuestionIndex = 0
     @State private var selectedAnswer = -1
-    
+    @State private var userSelections: [Int: Int] = [:]
+    @State private var showSubmissionAlert = false
     
     var body: some View {
-        NavigationStack{
-            ScrollView{
-                VStack(spacing: 40) {
-                    Text(questions[currentQuestionIndex].0)
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                        .padding(48)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 64)
-                                .stroke(.white, lineWidth: 2)
-                        )
-                        .cornerRadius(64)
-                    
-                    VStack(spacing: 20) {
-                        let columns = [
-                            GridItem(.flexible(), spacing: 32),
-                            GridItem(.flexible(), spacing: 32)
-                        ]
-                        
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(0..<questions[currentQuestionIndex].1.count, id: \.self) { index in
-                                QuizChoiceView(
-                                    index: index,
-                                    text: questions[currentQuestionIndex].1[index],
-                                    alphabet: String(UnicodeScalar(65 + index)!),
-                                    selectedAnswer: $selectedAnswer
-                                )
+        ZStack {
+            NavigationStack {
+                GeometryReader { geometry in
+                    ScrollView {
+                        if viewModel.isLoading {
+                            ProgressView("Loading...")
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else if let error = viewModel.error {
+                            ErrorView(error: error, retryAction: {
+                                Task { await viewModel.fetchQuiz(quizId: quizId) }
+                            })
+                        } else if let quizResponse = viewModel.quizResponse {
+                            VStack(spacing: 40) {
+                                let questions = quizResponse.quiz.questions
+                                if currentQuestionIndex < questions.count {
+                                    let currentQuestion = questions[currentQuestionIndex]
+                                    
+                                    Text(currentQuestion.question)
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                        .padding(48)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 64)
+                                                .stroke(.white, lineWidth: 2)
+                                        )
+                                        .cornerRadius(64)
+                                    
+                                    VStack(spacing: 20) {
+                                        let columns = [
+                                            GridItem(.flexible(), spacing: 32),
+                                            GridItem(.flexible(), spacing: 32)
+                                        ]
+                                        
+                                        LazyVGrid(columns: columns, spacing: 20) {
+                                            ForEach(currentQuestion.options, id: \.id) { option in
+                                                QuizChoiceView(
+                                                    index: option.id,
+                                                    text: option.text,
+                                                    alphabet: String(UnicodeScalar(64 + option.id)!),
+                                                    selectedAnswer: Binding(
+                                                        get: { userSelections[currentQuestion.id] ?? -1 },
+                                                        set: { userSelections[currentQuestion.id] = $0 }
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        .padding()
+                                    }
+                                    
+                                    QuestionFooterView(
+                                        currentQuestionIndex: $currentQuestionIndex,
+                                        count: questions.count,
+                                        onSubmit: submitQuiz
+                                    )
+                                } else {
+                                    Text("No more questions")
+                                        .foregroundColor(.white)
+                                }
                             }
+                            .padding(40)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else {
+                            Text("Quiz not found")
                         }
-                        .padding()
                     }
-                    Text("\(selectedAnswer)")
-                        .foregroundColor(.black)
-                    QuestionFooterView(currentQuestionIndex: $currentQuestionIndex, count: questions.count)
-                    
-                    
+                    .task {
+                        await viewModel.fetchQuiz(quizId: quizId)
+                    }
                 }
-                .padding(40)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .navigationTitle("Quiz")
+            }
+            
+            if showSubmissionAlert {
+                CustomAlertView(
+                    title: "Quiz Submitted",
+                    message: "Your responses have been submitted successfully.",
+                    dismissAction: { showSubmissionAlert = false }
+                )
+                .transition(.opacity)
+                .zIndex(10)
             }
         }
-        .navigationTitle("Quiz")
+    }
+    
+    func submitQuiz() {
+        // Prepare the data to send to the backend
+        let responses = userSelections.map { questionId, selectedOptionId in
+            ["questionId": questionId, "selectedOptionId": selectedOptionId]
+        }
+        
+        // Simulate sending data to the backend
+        // Replace this with actual network request code
+        print("Submitting responses: \(responses)")
+        
+        // Show confirmation dialog
+        showSubmissionAlert = true
+    }
+}
+
+
+struct CustomAlertView: View {
+    var title: String
+    var message: String
+    var dismissAction: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text(title)
+                .font(.system(size: 32, weight: .bold))
+                .multilineTextAlignment(.center)
+                .padding()
+            
+            Text(message)
+                .font(.system(size: 28))
+                .multilineTextAlignment(.center)
+                .padding()
+            
+            Button(action: dismissAction) {
+                Text("OK")
+                    .font(.system(size: 28, weight: .bold))
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+            }
+        }
+        .frame(width: 600)
+        .padding(.horizontal, 40)
+        .padding(.vertical, 40)
+        .background(Color.black.opacity(0.10))
+        .cornerRadius(20)
+        .shadow(radius: 10)
+        .glassBackgroundEffect()
+    
     }
 }
 
