@@ -41,9 +41,11 @@ export interface Quiz {
 export interface ImmersiveSet {
   _id: string;
   title: string;
-  videoUrl: string;
+  video_url: string;
   topics?: string[];
   quiz?: Quiz;
+  videoType?: 'youtube' | 'upload';
+  videoFile?: File;
 }
 
 export interface Course {

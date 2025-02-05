@@ -19,19 +19,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete'; 
-import { Quiz } from '@/types/types';
-
-interface Option {
-  id: number;
-  text: string;
-}
-
-interface Question {
-  id: number;
-  question: string;
-  options: Option[];
-  correctAnswerId: number;
-}
+import { Quiz, Option, Question } from '@/types/types';
 
 const CreateQuizForm: React.FC = () => {
     const [quizData, setQuizData] = useState<Quiz>({
@@ -68,24 +56,25 @@ const CreateQuizForm: React.FC = () => {
       }))
     };
 
-    try {
-      const response = await fetch('/api/quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedData),
-      });
+    // try {
+    //   const response = await fetch('/api/quiz', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(formattedData),
+    //   });
 
-      if (response.ok) {
-        alert('Quiz created successfully!');
-      } else {
-        alert('Error creating quiz');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error creating quiz');
-    }
+    //   if (response.ok) {
+    //     alert('Quiz created successfully!');
+    //   } else {
+    //     alert('Error creating quiz');
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error);
+    //   alert('Error creating quiz');
+    // }
+    console.log(formattedData);
   };
 
   // Add question
