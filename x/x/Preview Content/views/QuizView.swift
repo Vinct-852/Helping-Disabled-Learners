@@ -13,80 +13,80 @@ struct QuizView: View {
     @StateObject private var viewModel = QuizViewModel()
     let quizId: String
     let studentId: String = "60c72b2f9b1d4c001f8e4e40"
+    
     @State private var currentQuestionIndex = 0
     @State private var selectedAnswer = -1
     @State private var userSelections: [Int: Int] = [:]
     @State private var showSubmissionAlert = false
     
+    
     var body: some View {
         ZStack {
-            NavigationStack {
-                GeometryReader { geometry in
-                    ScrollView {
-                        if viewModel.isLoading {
-                            ProgressView("Loading...")
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        } else if let error = viewModel.error {
-                            ErrorView(error: error, retryAction: {
-                                Task { await viewModel.fetchQuiz(quizId: quizId) }
-                            })
-                        } else if let quizResponse = viewModel.quizResponse {
-                            VStack(spacing: 40) {
-                                let questions = quizResponse.quiz.questions
-                                if currentQuestionIndex < questions.count {
-                                    let currentQuestion = questions[currentQuestionIndex]
-                                    
-                                    Text(currentQuestion.question)
-                                        .font(.system(size: 40))
-                                        .foregroundColor(.white)
-                                        .padding(48)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 64)
-                                                .stroke(.white, lineWidth: 2)
-                                        )
-                                        .cornerRadius(64)
-                                    
-                                    VStack(spacing: 20) {
-                                        let columns = [
-                                            GridItem(.flexible(), spacing: 32),
-                                            GridItem(.flexible(), spacing: 32)
-                                        ]
-                                        
-                                        LazyVGrid(columns: columns, spacing: 20) {
-                                            ForEach(currentQuestion.options, id: \.id) { option in
-                                                QuizChoiceView(
-                                                    index: option.id,
-                                                    text: option.text,
-                                                    alphabet: String(UnicodeScalar(64 + option.id)!),
-                                                    selectedAnswer: Binding(
-                                                        get: { userSelections[currentQuestion.id] ?? -1 },
-                                                        set: { userSelections[currentQuestion.id] = $0 }
-                                                    )
-                                                )
-                                            }
-                                        }
-                                        .padding()
-                                    }
-                                    
-                                    QuestionFooterView(
-                                        currentQuestionIndex: $currentQuestionIndex,
-                                        count: questions.count,
-                                        onSubmit: submitQuiz
-                                    )
-                                } else {
-                                    Text("No more questions")
-                                        .foregroundColor(.white)
-                                }
-                            }
-                            .padding(40)
+            GeometryReader { geometry in
+                ScrollView {
+                    if viewModel.isLoading {
+                        ProgressView("Loading...")
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        } else {
-                            Text("Quiz not found")
+                    } else if let error = viewModel.error {
+                        ErrorView(error: error, retryAction: {
+                            Task { await viewModel.fetchQuiz(quizId: quizId) }
+                        })
+                    } else if let quizResponse = viewModel.quizResponse {
+                        VStack(spacing: 40) {
+                            let questions = quizResponse.quiz.questions
+                            if currentQuestionIndex < questions.count {
+                                let currentQuestion = questions[currentQuestionIndex]
+                                
+                                Text(currentQuestion.question)
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.white)
+                                    .padding(48)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 64)
+                                            .stroke(.white, lineWidth: 2)
+                                    )
+                                    .cornerRadius(64)
+                                
+                                VStack(spacing: 20) {
+                                    let columns = [
+                                        GridItem(.flexible(), spacing: 32),
+                                        GridItem(.flexible(), spacing: 32)
+                                    ]
+                                    
+                                    LazyVGrid(columns: columns, spacing: 20) {
+                                        ForEach(currentQuestion.options, id: \.id) { option in
+                                            QuizChoiceView(
+                                                index: option.id,
+                                                text: option.text,
+                                                alphabet: String(UnicodeScalar(64 + option.id)!),
+                                                selectedAnswer: Binding(
+                                                    get: { userSelections[currentQuestion.id] ?? -1 },
+                                                    set: { userSelections[currentQuestion.id] = $0 }
+                                                )
+                                            )
+                                        }
+                                    }
+                                    .padding()
+                                }
+                                
+                                QuestionFooterView(
+                                    currentQuestionIndex: $currentQuestionIndex,
+                                    count: questions.count,
+                                    onSubmit: submitQuiz
+                                )
+                            } else {
+                                Text("No more questions")
+                                    .foregroundColor(.white)
+                            }
                         }
+                        .padding(40)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        Text("Quiz not found")
                     }
-                    .task {
-                        await viewModel.fetchQuiz(quizId: quizId)
-                    }
+                }
+                .task {
+                    await viewModel.fetchQuiz(quizId: quizId)
                 }
                 .navigationTitle("Quiz")
             }
@@ -122,6 +122,7 @@ struct QuizView: View {
             // Submit the quiz results
             await viewModel.submitQuiz(quizResults: quizResults)
             showSubmissionAlert = true
+            NavigationManager.shared.path.removeLast()
         }
     }
 }
@@ -163,6 +164,6 @@ struct CustomAlertView: View {
     }
 }
 
-#Preview {
-    QuizView(quizId: "6798e34e901eefe0e8cbebff")
-}
+//#Preview {
+//    QuizView(quizId: "6798e34e901eefe0e8cbebff", navigationPath: $testPath)
+//}

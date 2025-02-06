@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+class NavigationManager: ObservableObject {
+    @Published var path = NavigationPath()
+    
+    static let shared = NavigationManager() // Singleton instance
+}
+
 @main
 struct xApp: App {
 

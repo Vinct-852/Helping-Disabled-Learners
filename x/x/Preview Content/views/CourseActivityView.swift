@@ -104,9 +104,9 @@ struct CourseActivityInstructionsSection: View {
                 .padding()
             }
             
-            NavigationLink {
-                QuizView(quizId: activity.quiz)
-            } label: {
+            Button(action: {
+                NavigationManager.shared.path.append(NavigationDestination.quiz(quizId: activity.quiz))
+            }) {
                 Text("Start Quiz")
                     .frame(maxWidth: .infinity)
                     .font(.system(size: 24, weight: .bold))
@@ -131,9 +131,9 @@ struct CourseActivityInstructionsSection: View {
     }
 }
 
-// MARK: - Preview
-#Preview {
-    NavigationStack {
-        CourseActivityView(activityId: "60c72b2f9b1d4c001f8e4e43")
-    }
-}
+//// MARK: - Preview
+//#Preview {
+//    NavigationStack {
+//        CourseActivityView(activityId: "60c72b2f9b1d4c001f8e4e43")
+//    }
+//}

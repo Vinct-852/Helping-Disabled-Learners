@@ -1,22 +1,16 @@
-//
-//  ContentView.swift
-//  x
-//
-//  Created by Hackathon on 24/1/2025.
-//
-
 import SwiftUI
 import RealityKit
 import RealityKitContent
 
 struct ContentView: View {
-    
+    @StateObject var navigationManager = NavigationManager.shared
+
     var body: some View {
-        VStack() {
-            NavigationStack{
-                NavigationLink{
-                    CoursesView()
-                } label:{
+        NavigationStack(path: $navigationManager.path) { // NavigationStack must wrap the content
+            VStack {
+                Button(action: {
+                    navigationManager.path.append(NavigationDestination.courses)
+                }) {
                     Text("Start")
                         .font(.system(size: 32, weight: .bold))
                         .foregroundColor(.white)
@@ -26,20 +20,23 @@ struct ContentView: View {
                         .cornerRadius(72)
                 }
                 .buttonStyle(PlainButtonStyle())
-                
             }
-            
-            
-            
+            .navigationDestination(for: NavigationDestination.self) { destination in
+                switch destination {
+                case .courses:
+                    CoursesView()
+                case .courseActivity(let activityId):
+                    CourseActivityView(activityId: activityId)
+                case .quiz(let quizId):
+                    QuizView(quizId: quizId)
+                }
+            }
         }
-
     }
-    
 }
 
-#Preview(windowStyle: .automatic) {
-    ContentView()
-        .environment(AppModel())
+enum NavigationDestination: Hashable {
+    case courseActivity(activityId: String)
+    case quiz(quizId: String)
+    case courses
 }
-
-

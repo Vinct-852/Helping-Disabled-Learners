@@ -12,35 +12,33 @@ struct SingleCourseView: View {
     @StateObject private var viewModel = CourseDetailsViewModel()
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 32) {
-                    // Loading State
-                    if viewModel.isLoading {
-                        ProgressView("Loading...")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                    // Error State
-                    else if let error = viewModel.error {
-                        ErrorView(error: error, retryAction: {
-                            Task { await viewModel.fetchCourse(byCourseCode: courseCode) }
-                        })
-                    }
-                    // Success State
-                    else if let course = viewModel.course {
-                        CourseHeaderView(course: course)
-                        CourseActivitiesView(course: course)
-                    }
-                    // Fallback State (Course Not Found)
-                    else {
-                        Text("Course Not Found")
-                            .font(.title)
-                            .foregroundColor(.white)
-                    }
+        ScrollView {
+            VStack(spacing: 32) {
+                // Loading State
+                if viewModel.isLoading {
+                    ProgressView("Loading...")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .padding(.horizontal, 64)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                // Error State
+                else if let error = viewModel.error {
+                    ErrorView(error: error, retryAction: {
+                        Task { await viewModel.fetchCourse(byCourseCode: courseCode) }
+                    })
+                }
+                // Success State
+                else if let course = viewModel.course {
+                    CourseHeaderView(course: course)
+                    CourseActivitiesView(course: course)
+                }
+                // Fallback State (Course Not Found)
+                else {
+                    Text("Course Not Found")
+                        .font(.title)
+                        .foregroundColor(.white)
+                }
             }
+            .padding(.horizontal, 64)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .navigationTitle("Course Details")
         .task {
@@ -113,9 +111,9 @@ struct CourseActivitiesView: View {
             
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(course.immersiveSets, id: \.self) { activityId in
-                    NavigationLink {
-                        CourseActivityView(activityId: activityId)
-                    } label: {
+                    Button(action: {
+                        NavigationManager.shared.path.append(NavigationDestination.courseActivity(activityId: activityId))
+                    }){
                         CourseActivityCardView(activityId: activityId)
                     }
                     .buttonStyle(PlainButtonStyle())
