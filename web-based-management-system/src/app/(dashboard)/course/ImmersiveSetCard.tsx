@@ -252,11 +252,11 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
                                 variant="body2"
                                 sx={{
                                   p: 1,
-                                  bgcolor: optIndex === question.correctAnswerId 
+                                  bgcolor: optIndex === question.correctAnswerId-1 
                                     ? 'success.light' 
                                     : 'background.paper',
                                   borderRadius: 1,
-                                  color: optIndex === question.correctAnswerId ? 'white' : 'inherit'
+                                  color: optIndex === question.correctAnswerId-1 ? 'white' : 'inherit'
                                 }}
                               >
                                 {option.text}
