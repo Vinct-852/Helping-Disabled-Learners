@@ -57,3 +57,44 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function POST(req: NextRequest) {
+  try {
+    const client = await connect;
+    const db = client.db('Teacher-Management-System');
+    const collection = db.collection('immersiveSets');
+
+    // Parse the request body
+    const body = await req.json();
+
+    // Create a new immersive set
+    const newImmersiveSet = {
+      ...body,
+      _id: new ObjectId(), // Generate a new ObjectId for MongoDB
+      // createdAt: new Date(), // Optional: Add a timestamp
+    };
+
+    const result = await collection.insertOne(newImmersiveSet);
+
+    // Check if the insert was successful
+    if (!result.acknowledged) {
+      return NextResponse.json(
+        { error: 'Failed to create immersive set' },
+        { status: 500 }
+      );
+    }
+
+    // Return the created immersive set (excluding the _id field if necessary)
+    return NextResponse.json(
+      { message: 'Immersive set created successfully', id: result.insertedId },
+      { status: 201 }
+    );
+
+  } catch (error) {
+    console.error('Error creating immersive set:', error);
+    return NextResponse.json(
+      { error: 'Failed to create immersive set' },
+      { status: 500 }
+    );
+  }
+}

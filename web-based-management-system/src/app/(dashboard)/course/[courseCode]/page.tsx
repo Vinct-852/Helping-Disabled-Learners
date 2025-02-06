@@ -15,7 +15,7 @@ export default function CourseDetailPage() {
   const [error, setError] = useState('');
 
   const handleAddSet = () => {
-    router.push(`/course/newImmersiveSet?courseId=${course?._id}`);
+    router.push(`/course/newImmersiveSet?courseId=${course?._id}&courseCode=${courseCode}`);
   };
 
   useEffect(() => {

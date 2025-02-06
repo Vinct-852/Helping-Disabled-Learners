@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   Box,
   Stepper,
@@ -40,10 +40,15 @@ import CreateQuizForm from '../../quiz/edit/page';
 
 interface ImmersiveSetCreateProps {
   courseId: string;
+  courseCode: string;
 }
 
 const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
-  const { courseId } = useParams<{ courseId: string }>();
+  const router = useRouter();
+  const { searchParams } = new URL(window.location.href);
+  const courseId = searchParams.get('courseId');
+  const courseCode = searchParams.get('courseCode');
+
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<Partial<ImmersiveSet>>({
     title: '',
@@ -54,7 +59,7 @@ const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
   const [quizOption, setQuizOption] = useState<'existing' | 'new'>('existing');
   const [existingQuizzes, setExistingQuizzes] = useState<MongoQuiz[]>([]);
   const [selectedQuiz, setSelectedQuiz] = useState<string>('');
-  const [newQuiz, setNewQuiz] = useState<Quiz | null>(null);
+  const [newQuiz, setNewQuiz] = useState<MongoQuiz | null>(null);
   const [openQuizDialog, setOpenQuizDialog] = useState(false);
   const [topicInput, setTopicInput] = useState('');
   const [missingFieldsDialogOpen, setMissingFieldsDialogOpen] = useState(false);
@@ -89,6 +94,49 @@ const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
     setQuizOption(event.target.value as 'existing' | 'new');
   };
 
+  const handleQuizCreated = (newQuiz: MongoQuiz) => {
+    setNewQuiz(newQuiz);
+    setQuizOption('new');
+    handleSubmit(newQuiz._id); // Submit the immersive set after quiz creation
+  };
+
+  const handleSubmit = async (quiz_id?: string) => {
+    formData.video_url = "https://www.youtube.com/embed/"+formData.video_url;
+    const finalSet: ImmersiveSet = {
+      ...formData,
+      _id: '', 
+      quiz: quizOption === 'existing' ? selectedQuiz : quiz_id,
+    } as ImmersiveSet;
+
+    try {
+      const response = await fetch('/api/immersiveSet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(finalSet)
+      });
+      
+      if (!response.ok) throw new Error('Failed to create immersive set');
+
+      const createdImmersiveSet = await response.json();
+      const secondFetchBody = {
+        immersiveSetId: createdImmersiveSet.id
+      };
+      const response2 = await fetch(`/api/course/${courseId}/immersive-set`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(secondFetchBody)
+      });
+
+      if (!response2) throw new Error('Submission failed');
+
+      alert('Immersive set created successfully!'); 
+      window.location.href = `/course/${courseCode}`;
+
+    } catch (error) {
+      console.error('Error creating immersive set:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
@@ -104,28 +152,6 @@ const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
       fetchQuizzes();
     }
   }, [quizOption]);
-
-  const handleSubmit = async () => {
-    const finalSet: ImmersiveSet = {
-      ...formData,
-      _id: '', // MongoDB will generate this
-      quiz: quizOption === 'existing' ? { _id: selectedQuiz } : newQuiz,
-      course: courseId
-    } as ImmersiveSet;
-    
-    console.log(finalSet);
-    // try {
-    //   const response = await fetch('/api/immersive-sets', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(finalSet)
-    //   });
-    //   if (!response.ok) throw new Error('Submission failed');
-    //   // Handle success
-    // } catch (error) {
-    //   console.error('Error creating immersive set:', error);
-    // }
-  };
 
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
@@ -311,49 +337,40 @@ const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
                 No existing quizzes found
             </Typography>
             )}
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+                <Button 
+                    variant="contained" 
+                    color="primary" 
+                    onClick={() => handleSubmit()} 
+                >
+                    Create Immersive Set
+                </Button>
+            </Box>
         </Box>
         ) : (
         <Stack spacing={2}>
-            <CreateQuizForm/>
-            {newQuiz && (
-            <Paper sx={{ p: 2, mt: 1 }}>
-                <Typography variant="subtitle2">Selected Quiz:</Typography>
-                <Typography>{newQuiz.title}</Typography>
-                <Typography variant="caption">
-                {newQuiz.questions.length} questions · {newQuiz.difficulty}
-                </Typography>
-            </Paper>
-            )}
+            <CreateQuizForm 
+              immersiveSetCreation
+              onQuizCreated={handleQuizCreated} 
+            />
         </Stack>
         )}
     </Box>
     )}
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-        {activeStep !== 0 && (
-          <Button onClick={handleBack} sx={{ mr: 1 }}>
-            Back
-          </Button>
-        )}
-        {activeStep === steps.length - 1 ? (
-          <Button variant="contained" onClick={handleSubmit}>
-            Finish
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={handleNext}>
-            Next
-          </Button>
-        )}
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+          {activeStep !== 0 && (
+            <Button onClick={handleBack} sx={{ mr: 1 }}>
+              Back
+            </Button>
+          )}
+          {activeStep < steps.length - 1 ? (
+            <Button variant="contained" onClick={handleNext}>
+              Next
+            </Button>
+          ) : null}
+        </Box>
 
-      {/* <QuizCreateDialog
-        open={openQuizDialog}
-        onClose={() => setOpenQuizDialog(false)}
-        onSave={(quiz) => {
-          setNewQuiz(quiz);
-          setOpenQuizDialog(false);
-        }}
-      /> */}
         <Dialog
             open={missingFieldsDialogOpen}
             onClose={() => setMissingFieldsDialogOpen(false)}
