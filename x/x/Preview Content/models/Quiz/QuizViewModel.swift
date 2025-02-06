@@ -35,4 +35,33 @@ class QuizViewModel: ObservableObject {
         
         isLoading = false
     }
+    
+    // Submit quiz results
+    func submitQuiz(quizResults: QuizResults) async {
+        isLoading = true
+        error = nil
+        
+        do {
+            // Encode the QuizResults to Data
+            let jsonData = try JSONEncoder().encode(quizResults)
+            
+            // Convert Data to a JSON dictionary
+            if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                // Replace with your actual API endpoint
+                let _: QuizSubmissionResponse = try await networkManager.post(
+                    url: URL(string: "\(Configuration.shared.baseURL)/quiz/\(quizResults.quizId)"),
+                    parameters: jsonObject,
+                    headers: ["Content-Type": "application/json"]
+                )
+            } else {
+                print("Failed to convert JSON data to dictionary")
+            }
+        } catch let networkError as NetworkError {
+            self.error = networkError
+        } catch {
+            self.error = .unknown(error)
+        }
+        
+        isLoading = false
+    }
 }

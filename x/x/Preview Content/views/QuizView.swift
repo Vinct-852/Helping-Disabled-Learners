@@ -12,7 +12,7 @@ import SwiftUI
 struct QuizView: View {
     @StateObject private var viewModel = QuizViewModel()
     let quizId: String
-    
+    let studentId: String = "60c72b2f9b1d4c001f8e4e40"
     @State private var currentQuestionIndex = 0
     @State private var selectedAnswer = -1
     @State private var userSelections: [Int: Int] = [:]
@@ -95,7 +95,9 @@ struct QuizView: View {
                 CustomAlertView(
                     title: "Quiz Submitted",
                     message: "Your responses have been submitted successfully.",
-                    dismissAction: { showSubmissionAlert = false }
+                    dismissAction: {
+                        showSubmissionAlert = false
+                    }
                 )
                 .transition(.opacity)
                 .zIndex(10)
@@ -104,17 +106,23 @@ struct QuizView: View {
     }
     
     func submitQuiz() {
-        // Prepare the data to send to the backend
-        let responses = userSelections.map { questionId, selectedOptionId in
-            ["questionId": questionId, "selectedOptionId": selectedOptionId]
+        Task {
+            guard let quizResponse = viewModel.quizResponse else { return }
+            
+            // Determine if each answer is correct
+            let answers = quizResponse.quiz.questions.map { question in
+                let selectedOptionId = userSelections[question.id] ?? -1
+                let isCorrect = selectedOptionId == question.correctAnswerId
+                return Answer(selectedOptionId: selectedOptionId, questionId: question.id, isCorrect: isCorrect)
+            }
+            
+            // Create a QuizResults object
+            let quizResults = QuizResults(quizId: quizId, studentId: studentId, date: Date(), answers: answers)
+            
+            // Submit the quiz results
+            await viewModel.submitQuiz(quizResults: quizResults)
+            showSubmissionAlert = true
         }
-        
-        // Simulate sending data to the backend
-        // Replace this with actual network request code
-        print("Submitting responses: \(responses)")
-        
-        // Show confirmation dialog
-        showSubmissionAlert = true
     }
 }
 
@@ -151,7 +159,7 @@ struct CustomAlertView: View {
         .cornerRadius(20)
         .shadow(radius: 10)
         .glassBackgroundEffect()
-    
+        
     }
 }
 
