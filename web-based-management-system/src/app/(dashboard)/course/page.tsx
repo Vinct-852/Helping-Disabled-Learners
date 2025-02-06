@@ -56,14 +56,14 @@ export default function CoursePage() {
             Courses
           </Typography>
 
-          <Button
+          {/* <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={handleAddCourse}
             sx={{ mb: 3 }}
           >
             Add New Course
-          </Button>
+          </Button> */}
 
           <Grid container spacing={3}>
             {courses.map((course) => (

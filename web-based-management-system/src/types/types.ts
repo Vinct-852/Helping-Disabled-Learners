@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export interface MongoQuiz {
   _id: string;
   quiz: Quiz;
@@ -41,9 +43,11 @@ export interface Quiz {
 export interface ImmersiveSet {
   _id: string;
   title: string;
-  videoUrl: string;
+  video_url: string;
   topics?: string[];
-  quiz?: Quiz;
+  quiz?: ObjectId;
+  videoType?: 'youtube' | 'upload';
+  videoFile?: File;
 }
 
 export interface Course {
@@ -52,5 +56,5 @@ export interface Course {
   courseCode: string;
   description: string;
   teacherId: string;
-  immersiveSets: ImmersiveSet[];
+  immersiveSets: ObjectId[];
 }

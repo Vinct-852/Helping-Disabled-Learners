@@ -88,14 +88,14 @@ export const CourseCard = ({ _id, course }: { _id: string; course: Course }) => 
             >
               View
             </Button>
-            <Button
+            {/* <Button
               variant="outlined"
               color="error"
               size="small"
               onClick={() => setDeleteDialogOpen(true)}
             >
               Delete
-            </Button>
+            </Button> */}
           </Box>
         </CardContent>
       </Card>

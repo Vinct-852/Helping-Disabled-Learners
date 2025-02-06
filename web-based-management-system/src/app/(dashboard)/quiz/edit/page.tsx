@@ -19,21 +19,14 @@ import { DatePicker } from '@mui/x-date-pickers';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete'; 
-import { Quiz } from '@/types/types';
+import { Quiz, Option, Question, MongoQuiz } from '@/types/types';
 
-interface Option {
-  id: number;
-  text: string;
+interface CreateQuizFormProps {
+  immersiveSetCreation: boolean;
+  onQuizCreated?: (quiz: MongoQuiz) => void;
 }
 
-interface Question {
-  id: number;
-  question: string;
-  options: Option[];
-  correctAnswerId: number;
-}
-
-const CreateQuizForm: React.FC = () => {
+const CreateQuizForm: React.FC<CreateQuizFormProps> = ({onQuizCreated, immersiveSetCreation}) => {
     const [quizData, setQuizData] = useState<Quiz>({
         title: '',
         description: '',
@@ -54,18 +47,24 @@ const CreateQuizForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Convert numeric IDs to the required format
     const formattedData = {
-      ...quizData,
-      questions: quizData.questions.map(question => ({
-        ...question,
-        id: { $numberInt: question.id.toString() },
-        correctAnswerId: { $numberInt: question.correctAnswerId.toString() },
-        options: question.options.map(option => ({
-          ...option,
-          id: { $numberInt: option.id.toString() }
+      quiz: {
+        title: quizData.title,
+        description: quizData.description,
+        author: quizData.author,
+        creationDate: quizData.creationDate,
+        category: quizData.category,
+        difficulty: quizData.difficulty,
+        questions: quizData.questions.map(question => ({
+          id: question.id,
+          question: question.question,
+          options: question.options.map(option => ({
+            id: option.id,
+            text: option.text
+          })),
+          correctAnswerId: question.correctAnswerId 
         }))
-      }))
+      }
     };
 
     try {
@@ -78,7 +77,10 @@ const CreateQuizForm: React.FC = () => {
       });
 
       if (response.ok) {
-        alert('Quiz created successfully!');
+        const createdQuiz = await response.json();
+        if (onQuizCreated) {
+          onQuizCreated(createdQuiz);
+        }
       } else {
         alert('Error creating quiz');
       }
@@ -268,9 +270,15 @@ const CreateQuizForm: React.FC = () => {
         </Button>
 
         <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Button type="submit" variant="contained" size="large">
-            Create Quiz
-          </Button>
+          {immersiveSetCreation?(
+            <Button type="submit" variant="contained" size="large">
+              Create Immersive Set
+            </Button>
+          ):(
+            <Button type="submit" variant="contained" size="large">
+              Create Quiz
+            </Button>
+          )}
         </Box>
       </Box>
     </Container>
