@@ -118,6 +118,18 @@ struct CourseActivityInstructionsSection: View {
             }
             .buttonStyle(PlainButtonStyle())
             
+            Button(action: {
+                NavigationManager.shared.path.append(NavigationDestination.performance(quizId: activity.quiz))
+            }) {
+                Text("View Results")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 96)
+                    .padding(.vertical, 20)
+                    .cornerRadius(64)
+            }
+            
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -131,9 +143,9 @@ struct CourseActivityInstructionsSection: View {
     }
 }
 
-//// MARK: - Preview
-//#Preview {
-//    NavigationStack {
-//        CourseActivityView(activityId: "60c72b2f9b1d4c001f8e4e43")
-//    }
-//}
+// MARK: - Preview
+#Preview {
+    NavigationStack {
+        CourseActivityView(activityId: "60c72b2f9b1d4c001f8e4e43")
+    }
+}

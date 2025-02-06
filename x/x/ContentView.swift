@@ -29,7 +29,10 @@ struct ContentView: View {
                     CourseActivityView(activityId: activityId)
                 case .quiz(let quizId):
                     QuizView(quizId: quizId)
+                case .performance(let quizId):
+                    QuizPerformanceView(quizId: quizId)
                 }
+                
             }
         }
     }
@@ -39,4 +42,5 @@ enum NavigationDestination: Hashable {
     case courseActivity(activityId: String)
     case quiz(quizId: String)
     case courses
+    case performance(quizId: String)
 }
