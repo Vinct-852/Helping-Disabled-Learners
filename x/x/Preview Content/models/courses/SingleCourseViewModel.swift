@@ -21,7 +21,7 @@ class CourseDetailsViewModel: ObservableObject {
         do {
             // Replace with your actual API endpoint
             let course: Course = try await networkManager.get(
-                url: URL(string: "http://localhost:3000/api/course/?courseCode=\(courseCode)"),
+                url: URL(string: "\(Configuration.shared.baseURL)/course/?courseCode=\(courseCode)"),
                 headers: ["Authorization": "Bearer YOUR_TOKEN"]
             )
             self.course = course

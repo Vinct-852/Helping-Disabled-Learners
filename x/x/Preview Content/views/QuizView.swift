@@ -37,7 +37,7 @@ struct QuizView: View {
                                     let currentQuestion = questions[currentQuestionIndex]
                                     
                                     Text(currentQuestion.question)
-                                        .font(.largeTitle)
+                                        .font(.system(size: 40))
                                         .foregroundColor(.white)
                                         .padding(48)
                                         .overlay(
@@ -125,16 +125,16 @@ struct CustomAlertView: View {
     var dismissAction: () -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 24) {
             Text(title)
                 .font(.system(size: 32, weight: .bold))
                 .multilineTextAlignment(.center)
-                .padding()
             
             Text(message)
                 .font(.system(size: 28))
                 .multilineTextAlignment(.center)
-                .padding()
+            
+            Divider()
             
             Button(action: dismissAction) {
                 Text("OK")
@@ -144,10 +144,10 @@ struct CustomAlertView: View {
                     .foregroundColor(.white)
             }
         }
-        .frame(width: 600)
+        .frame(width: 400)
         .padding(.horizontal, 40)
         .padding(.vertical, 40)
-        .background(Color.black.opacity(0.10))
+        .background(Color.white.opacity(0.10))
         .cornerRadius(20)
         .shadow(radius: 10)
         .glassBackgroundEffect()

@@ -50,9 +50,12 @@ struct CourseActivityVideoSection: View {
     let activity: CourseActivity
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            VideoPlayerView()
-                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fill)
-                .frame(maxWidth: .infinity)
+//            VideoPlayerView()
+//                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fill)
+//                .frame(maxWidth: .infinity)
+//                .cornerRadius(24)
+            YoutubeVideoPlayeView(videoUrl: activity.video_url)
+                .frame(width: .infinity)
                 .cornerRadius(24)
             
             VStack(alignment: .leading, spacing: 12) {

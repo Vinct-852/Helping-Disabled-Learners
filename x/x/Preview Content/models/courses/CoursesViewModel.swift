@@ -22,7 +22,7 @@ class CoursesViewModel: ObservableObject {
         do {
 //             Replace with your actual API endpoint
             let courses: [Course] = try await networkManager.get(
-                url: URL(string: "http://localhost:3000/api/course")
+                url: URL(string: "\(Configuration.shared.baseURL)/course")
             )
             self.courses = courses
 //            self.courses = CourseMockData.courses

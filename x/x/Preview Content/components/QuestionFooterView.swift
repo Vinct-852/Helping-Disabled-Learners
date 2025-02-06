@@ -40,8 +40,8 @@ struct QuestionFooterView: View {
                 .foregroundColor(.white)
                 .padding(.vertical, 20)
                 .padding(.horizontal, 64)
-                .background(.black.opacity(0.20))
-                .cornerRadius(24)
+                .background(.black.opacity(0.15))
+                .cornerRadius(72)
             Spacer()
             
             Button(action: {

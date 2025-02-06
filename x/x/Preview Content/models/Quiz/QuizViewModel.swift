@@ -24,7 +24,7 @@ class QuizViewModel: ObservableObject {
         do {
             // Replace with your actual API endpoint
             let quizResponse: QuizResponse = try await networkManager.get(
-                url: URL(string: "http://localhost:3000/api/quiz?_id=\(quizId)")
+                url: URL(string: "\(Configuration.shared.baseURL)/quiz?_id=\(quizId)")
             )
             self.quizResponse = quizResponse
         } catch let networkError as NetworkError {

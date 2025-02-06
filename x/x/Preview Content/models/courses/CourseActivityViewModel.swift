@@ -23,7 +23,7 @@ class CourseActivityViewModel: ObservableObject {
         do {
             // Replace with your actual API endpoint
             let activity: CourseActivity = try await networkManager.get(
-                url: URL(string: "http://localhost:3000/api/immersiveSet?_id=\(activityId)")
+                url: URL(string: "\(Configuration.shared.baseURL)/immersiveSet?_id=\(activityId)")
             )
             self.activity = activity
         } catch let networkError as NetworkError {
