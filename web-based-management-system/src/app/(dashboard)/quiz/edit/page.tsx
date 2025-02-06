@@ -48,24 +48,22 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({onQuizCreated, immersive
     e.preventDefault();
     
     const formattedData = {
-      quiz: {
-        title: quizData.title,
-        description: quizData.description,
-        author: quizData.author,
-        creationDate: quizData.creationDate,
-        category: quizData.category,
-        difficulty: quizData.difficulty,
-        questions: quizData.questions.map(question => ({
-          id: question.id,
-          question: question.question,
-          options: question.options.map(option => ({
-            id: option.id,
-            text: option.text
-          })),
-          correctAnswerId: question.correctAnswerId 
-        }))
-      }
-    };
+      title: quizData.title,
+      description: quizData.description,
+      author: quizData.author,
+      creationDate: quizData.creationDate,
+      category: quizData.category,
+      difficulty: quizData.difficulty,
+      questions: quizData.questions.map(question => ({
+        id: question.id,
+        question: question.question,
+        options: question.options.map(option => ({
+          id: option.id,
+          text: option.text
+        })),
+        correctAnswerId: question.correctAnswerId 
+      }))
+    }
 
     try {
       const response = await fetch('/api/quiz', {
