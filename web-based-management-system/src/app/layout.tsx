@@ -33,7 +33,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Travel Planner",
+  title: "Helping-Disabled-Learners",
   description: "",
 };
 
@@ -66,7 +66,7 @@ export default function RootLayout({
                   mt: { xs: 8, md: 0 }, 
                 }}
               >
-                {/* <Header /> */}
+                <Header />
                 {children}
               </Stack>
             </Box>
