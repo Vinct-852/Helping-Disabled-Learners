@@ -13,5 +13,6 @@ struct CourseActivity: Codable {
     let video_url: String
     let quiz: String
     let topics: [String]
+    let completed: Bool
 }
 

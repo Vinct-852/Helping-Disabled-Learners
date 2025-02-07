@@ -15,14 +15,14 @@ class CoursesViewModel: ObservableObject {
     
     private let networkManager = NetworkManager.shared
     
-    func fetchAllCourses() async {
+    func fetchAllCourses(studentId: String) async {
         isLoading = true
         error = nil
         
         do {
 //             Replace with your actual API endpoint
             let courses: [Course] = try await networkManager.get(
-                url: URL(string: "\(Configuration.shared.baseURL)/course")
+                url: URL(string: "\(Configuration.shared.baseURL)/students/\(studentId)/courses")
             )
             self.courses = courses
 //            self.courses = CourseMockData.courses

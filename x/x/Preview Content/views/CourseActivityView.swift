@@ -10,6 +10,7 @@ import WebKit
 
 struct CourseActivityView: View {
     @StateObject private var viewModel = CourseActivityViewModel()
+    @ObservedObject var userManager = UserManager.shared
     let activityId: String
     var body: some View {
         GeometryReader { geometry in
@@ -19,7 +20,10 @@ struct CourseActivityView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let error = viewModel.error {
                     ErrorView(error: error, retryAction: {
-                        Task { await viewModel.fetchActivity(activityId: activityId) }
+                        Task {
+                            await viewModel.fetchActivity(activityId: activityId,
+                                                          studentId: userManager.studentId ?? "xxx")
+                        }
                     })
                 } else if let activity = viewModel.activity {
                     HStack(alignment: .top, spacing: 24) {
@@ -38,7 +42,7 @@ struct CourseActivityView: View {
                 }
             }
             .task {
-                await viewModel.fetchActivity(activityId: activityId)
+                await viewModel.fetchActivity(activityId: activityId, studentId: userManager.studentId ?? "xxx")
             }
         }
         .navigationTitle("Course Activity")
@@ -49,7 +53,7 @@ struct CourseActivityView: View {
 struct CourseActivityVideoSection: View {
     let activity: CourseActivity
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 20) {
 //            VideoPlayerView()
 //                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fill)
 //                .frame(maxWidth: .infinity)
@@ -58,7 +62,19 @@ struct CourseActivityVideoSection: View {
                 .frame(width: .infinity)
                 .cornerRadius(24)
             
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack{
+                    ForEach(activity.topics, id: \.self){ topic in
+                        Text(topic)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 16)
+                            .background(.white.opacity(0.20))
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.white)
+                            .cornerRadius(64)
+                    }
+                }
+                
                 Text(activity.title)
                     .font(.system(size: 40, weight: .bold))
                 
@@ -104,32 +120,39 @@ struct CourseActivityInstructionsSection: View {
                 .padding()
             }
             
-            Button(action: {
-                NavigationManager.shared.path.append(NavigationDestination.quiz(quizId: activity.quiz))
-            }) {
-                Text("Start Quiz")
-                    .frame(maxWidth: .infinity)
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 96)
-                    .padding(.vertical, 20)
-                    .background(Color.black)
-                    .cornerRadius(64)
+            if activity.completed{
+                Button(action: {
+                    NavigationManager.shared.path.append(NavigationDestination.performance(quizId: activity.quiz))
+                }) {
+                    Text("View Results")
+                        .frame(maxWidth: .infinity)
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 96)
+                        .padding(.vertical, 20)
+                        .cornerRadius(64)
+                }
+                
             }
-            .buttonStyle(PlainButtonStyle())
-            
-            Button(action: {
-                NavigationManager.shared.path.append(NavigationDestination.performance(quizId: activity.quiz))
-            }) {
-                Text("View Results")
-                    .frame(maxWidth: .infinity)
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 96)
-                    .padding(.vertical, 20)
-                    .cornerRadius(64)
+            else {
+                Button(action: {
+                    NavigationManager.shared.path.append(NavigationDestination.quiz(quizId: activity.quiz))
+                }) {
+                    Text("Start Quiz")
+                        .frame(maxWidth: .infinity)
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 96)
+                        .padding(.vertical, 20)
+                        .background(Color.black)
+                        .cornerRadius(64)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
             
+         
+            
+           
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

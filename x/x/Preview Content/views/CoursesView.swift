@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CoursesView: View {
     @StateObject private var viewModel = CoursesViewModel()
+    @ObservedObject var userManager = UserManager.shared
     
     var body: some View {
         GeometryReader{ geometry in
@@ -18,7 +19,7 @@ struct CoursesView: View {
                         ProgressView("Loading...")
                     } else if let error = viewModel.error {
                         ErrorView(error: error, retryAction: {
-                            Task { await viewModel.fetchAllCourses() }
+                            Task { await viewModel.fetchAllCourses(studentId: userManager.studentId ?? "") }
                         })
                     } else {
                         let columns = [
@@ -49,7 +50,7 @@ struct CoursesView: View {
         }
         .navigationTitle("Courses")
         .task {
-            await viewModel.fetchAllCourses()
+            await viewModel.fetchAllCourses(studentId: userManager.studentId ?? "")
         }
     }
 }

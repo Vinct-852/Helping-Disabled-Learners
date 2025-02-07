@@ -48,6 +48,7 @@ export interface ImmersiveSet {
   quiz?: ObjectId;
   videoType?: 'youtube' | 'upload';
   videoFile?: File;
+  completed?: Boolean;
 }
 
 export interface Course {

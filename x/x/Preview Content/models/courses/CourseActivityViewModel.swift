@@ -16,14 +16,14 @@ class CourseActivityViewModel: ObservableObject {
     private let networkManager = NetworkManager.shared
     
     // Fetch all activities for a course
-    func fetchActivity(activityId: String) async {
+    func fetchActivity(activityId: String, studentId: String) async {
         isLoading = true
         error = nil
         
         do {
             // Replace with your actual API endpoint
             let activity: CourseActivity = try await networkManager.get(
-                url: URL(string: "\(Configuration.shared.baseURL)/immersiveSet?_id=\(activityId)")
+                url: URL(string: "\(Configuration.shared.baseURL)/students/\(studentId)/immersiveSets/\(activityId)")
             )
             self.activity = activity
         } catch let networkError as NetworkError {

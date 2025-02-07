@@ -117,7 +117,7 @@ struct CourseActivitiesView: View {
                         CourseActivityCardView(activityId: activityId)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .buttonBorderShape(.roundedRectangle(radius: 0))
+                    .buttonBorderShape(.roundedRectangle(radius: 12))
                 }
             }
         }

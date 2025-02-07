@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CourseActivityCardView: View {
     @StateObject private var viewModel = CourseActivityViewModel()
+    @ObservedObject var userManager = UserManager.shared
     let activityId: String
     var body: some View {
         VStack{
@@ -17,7 +18,7 @@ struct CourseActivityCardView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let error = viewModel.error {
                 ErrorView(error: error, retryAction: {
-                    Task { await viewModel.fetchActivity(activityId: activityId) }
+                    Task { await viewModel.fetchActivity(activityId: activityId, studentId: userManager.studentId ?? "xxx") }
                 })
             } else if let activity = viewModel.activity {
                 AsyncImage(url: URL(string: "https://res.cloudinary.com/nowo-ltd/image/upload/v1738138068/visionpropro/selective-focus-face-young-asian-boy-girl-smile-having-fun-doing-science-experiment-laboratory-classroom-215712293_x4xezg.webp")) { image in
@@ -28,7 +29,8 @@ struct CourseActivityCardView: View {
                     Color.gray // Placeholder while the image is loading
                         .aspectRatio(16/9, contentMode: .fit)
                 }
-                VStack {
+                VStack(alignment: .leading, spacing: 16) {
+                    
                     Text("20 min")
                         .foregroundColor(.white)
                         .font(.system(size: 24, weight: .regular))
@@ -37,8 +39,19 @@ struct CourseActivityCardView: View {
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if activity.completed {
+                        Text("Completed")
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 20)
+                            .background(Color("darkGreen"))
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
                 }
-                .padding(16)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 24)
                 Spacer()
             }
             else{
@@ -51,10 +64,10 @@ struct CourseActivityCardView: View {
         .cornerRadius(12) // Corner radius
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.25), lineWidth: 3) // Border with 25% opacity
+                .stroke(Color.white.opacity(0.25), lineWidth: 1) // Border with 25% opacity
         )
         .task{
-            await viewModel.fetchActivity(activityId: activityId)
+            await viewModel.fetchActivity(activityId: activityId, studentId: userManager.studentId ?? "xxx")
         }
     }
     
