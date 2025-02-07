@@ -9,38 +9,61 @@ import SwiftUI
 
 struct QuizPerformanceView: View {
     let quizId: String
-    let quizPerformance: QuizPerformance = MockQuizPerformance.sampleQuizPerformance
-
+    
+    let studentId: String = "60c72b2f9b1d4c001f8e4e40"
+    
+    @StateObject var viewModel = QuizPerformanceViewModel()
+    
     var body: some View {
         ScrollView {
-            VStack(spacing: 48){
-                Text("\(quizPerformance.percentage, specifier: "%.2f")")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.vertical, 24)
-                    .padding(.horizontal, 48)
-                    .background(.black)
-                    .cornerRadius(48)
+            if viewModel.isLoading {
+                ProgressView("Loading...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let error = viewModel.error {
+                ErrorView(error: error, retryAction: {
+                    Task {
+                        await viewModel.fetchQuizPerformance(
+                                quizId: quizId,
+                                studentId: studentId
+                                )
+                    }
+                })
+            } else if let quizPerformance = viewModel.quizPerformance {
+                VStack(spacing: 48){
+                    Text("\(quizPerformance.percentage, specifier: "%.2f")")
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 24)
+                        .padding(.horizontal, 48)
+                        .background(.black)
+                        .cornerRadius(48)
                     
-                
-                VStack(alignment: .leading, spacing: 32) {
-                    ForEach(quizPerformance.questions, id: \.id) { question in
-                        
-                        QuestionPerformanceView(question: question)
-                        // Divider between questions
-                        if question.id != quizPerformance.questions.last?.id {
-                            Divider()
-                                .background(Color.white.opacity(0.5))
+                    
+                    VStack(alignment: .leading, spacing: 32) {
+                        ForEach(quizPerformance.questions, id: \.id) { question in
+                            
+                            QuestionPerformanceView(question: question)
+                            // Divider between questions
+                            if question.id != quizPerformance.questions.last?.id {
+                                Divider()
+                                    .background(Color.white.opacity(0.5))
+                            }
                         }
                     }
+                    .padding()
                 }
-                .padding()
+                .padding(64)
             }
-            .padding(64)
-          
+            else{
+                Text("No Quiz Results")
+                    .foregroundColor(.white)
+            }
             
         }
         .navigationTitle("Quiz Performance")
+        .task {
+            await viewModel.fetchQuizPerformance(quizId: quizId, studentId: studentId)
+        }
     }
 
 }

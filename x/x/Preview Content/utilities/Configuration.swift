@@ -14,6 +14,6 @@ class Configuration {
     
     var baseURL: String {
         // Replace with your actual base URL
-        return "http://172.16.172.23:3000/api"
+        return "http://localhost:3000/api"
     }
 }

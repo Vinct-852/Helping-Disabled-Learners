@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct QuizPerformance {
+struct QuizPerformance: Codable {
     var _id: String
     var percentage: Double
     var questions: [ResultQuestion]
 }
 
-struct ResultQuestion {
+struct ResultQuestion: Codable {
     var id: Int
     var text: String
     var options: [ResultOption]
@@ -22,7 +22,7 @@ struct ResultQuestion {
     var isCorrect: Bool
 }
 
-struct ResultOption{
+struct ResultOption : Codable{
     var id: Int
     var text: String
 }
