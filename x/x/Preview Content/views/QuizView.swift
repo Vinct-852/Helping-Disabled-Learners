@@ -12,7 +12,7 @@ import SwiftUI
 struct QuizView: View {
     @StateObject private var viewModel = QuizViewModel()
     let quizId: String
-    @ObservedObject var userManager = UserManager.shared
+    @ObservedObject var auth = AuthManager.shared
     
     @State private var currentQuestionIndex = 0
     @State private var selectedAnswer = -1
@@ -117,7 +117,7 @@ struct QuizView: View {
             }
             
             // Create a QuizResults object
-            let quizResults = QuizResults(quizId: quizId, studentId: userManager.studentId ?? "xxx", date: Date(), answers: answers)
+            let quizResults = QuizResults(quizId: quizId, studentId: auth.currentUser?._id ?? "xxx", date: Date(), answers: answers)
             
             // Submit the quiz results
             await viewModel.submitQuiz(quizResults: quizResults)

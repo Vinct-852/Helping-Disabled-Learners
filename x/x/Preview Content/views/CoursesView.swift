@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CoursesView: View {
     @StateObject private var viewModel = CoursesViewModel()
-    @ObservedObject var userManager = UserManager.shared
+    @ObservedObject var auth = AuthManager.shared
     
     var body: some View {
         GeometryReader{ geometry in
@@ -20,7 +20,7 @@ struct CoursesView: View {
                         ProgressView("Loading...")
                     } else if let error = viewModel.error {
                         ErrorView(error: error, retryAction: {
-                            Task { await viewModel.fetchAllCourses(studentId: userManager.studentId ?? "") }
+                            Task { await viewModel.fetchAllCourses(studentId: auth.currentUser?._id ?? "") }
                         })
                     } else {
                         Jumbotron()
@@ -58,7 +58,7 @@ struct CoursesView: View {
             }
         }
         .task {
-            await viewModel.fetchAllCourses(studentId: userManager.studentId ?? "")
+            await viewModel.fetchAllCourses(studentId: auth.currentUser?._id ?? "")
         }
     }
 }

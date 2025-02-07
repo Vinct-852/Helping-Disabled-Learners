@@ -10,7 +10,7 @@ import SwiftUI
 struct QuizPerformanceView: View {
     let quizId: String
     
-    @ObservedObject var userManager = UserManager.shared
+    @ObservedObject var auth = AuthManager.shared
     
     @StateObject var viewModel = QuizPerformanceViewModel()
     
@@ -24,7 +24,7 @@ struct QuizPerformanceView: View {
                     Task {
                         await viewModel.fetchQuizPerformance(
                                 quizId: quizId,
-                                studentId: userManager.studentId ?? "xxx"
+                                studentId: auth.currentUser?._id ?? "xxx"
                                 )
                     }
                 })
@@ -62,7 +62,7 @@ struct QuizPerformanceView: View {
         }
         .navigationTitle("Quiz Performance")
         .task {
-            await viewModel.fetchQuizPerformance(quizId: quizId, studentId: userManager.studentId ?? "xxx")
+            await viewModel.fetchQuizPerformance(quizId: quizId, studentId: auth.currentUser?._id ?? "xxx")
         }
     }
 

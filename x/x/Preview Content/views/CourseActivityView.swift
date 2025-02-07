@@ -10,7 +10,7 @@ import WebKit
 
 struct CourseActivityView: View {
     @StateObject private var viewModel = CourseActivityViewModel()
-    @ObservedObject var userManager = UserManager.shared
+    @ObservedObject var auth = AuthManager.shared
     let activityId: String
     var body: some View {
         GeometryReader { geometry in
@@ -22,7 +22,7 @@ struct CourseActivityView: View {
                     ErrorView(error: error, retryAction: {
                         Task {
                             await viewModel.fetchActivity(activityId: activityId,
-                                                          studentId: userManager.studentId ?? "xxx")
+                                                          studentId: auth.currentUser?._id ?? "xxx")
                         }
                     })
                 } else if let activity = viewModel.activity {
@@ -42,7 +42,7 @@ struct CourseActivityView: View {
                 }
             }
             .task {
-                await viewModel.fetchActivity(activityId: activityId, studentId: userManager.studentId ?? "xxx")
+                await viewModel.fetchActivity(activityId: activityId, studentId: auth.currentUser?._id ?? "xxx")
             }
         }
         .navigationTitle("Course Activity")

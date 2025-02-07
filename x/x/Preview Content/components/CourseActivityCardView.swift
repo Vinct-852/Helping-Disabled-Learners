@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CourseActivityCardView: View {
     @StateObject private var viewModel = CourseActivityViewModel()
-    @ObservedObject var userManager = UserManager.shared
+    @ObservedObject var auth = AuthManager.shared
     let activityId: String
     var body: some View {
         VStack{
@@ -18,7 +18,7 @@ struct CourseActivityCardView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let error = viewModel.error {
                 ErrorView(error: error, retryAction: {
-                    Task { await viewModel.fetchActivity(activityId: activityId, studentId: userManager.studentId ?? "xxx") }
+                    Task { await viewModel.fetchActivity(activityId: activityId, studentId: auth.currentUser?._id ?? "xxx") }
                 })
             } else if let activity = viewModel.activity {
                 AsyncImage(url: URL(string: "https://res.cloudinary.com/nowo-ltd/image/upload/v1738138068/visionpropro/selective-focus-face-young-asian-boy-girl-smile-having-fun-doing-science-experiment-laboratory-classroom-215712293_x4xezg.webp")) { image in
@@ -67,7 +67,7 @@ struct CourseActivityCardView: View {
                 .stroke(Color.white.opacity(0.25), lineWidth: 1) // Border with 25% opacity
         )
         .task{
-            await viewModel.fetchActivity(activityId: activityId, studentId: userManager.studentId ?? "xxx")
+            await viewModel.fetchActivity(activityId: activityId, studentId: auth.currentUser?._id ?? "xxx")
         }
     }
     
