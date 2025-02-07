@@ -66,7 +66,8 @@ export async function POST(req: NextRequest) {
 
     // Parse the request body
     const body = await req.json();
-
+    body.quiz = body.quiz ? new ObjectId(body.quiz) : null;
+    
     // Create a new immersive set
     const newImmersiveSet = {
       ...body,

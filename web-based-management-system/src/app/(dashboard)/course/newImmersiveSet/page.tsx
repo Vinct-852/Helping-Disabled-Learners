@@ -101,7 +101,7 @@ const ImmersiveSetCreateContent = () => {
     const finalSet: ImmersiveSet = {
       ...formData,
       _id: '', 
-      quiz: quizOption === 'existing' ? new ObjectId(selectedQuiz) : new ObjectId(quiz_id),
+      quiz: quizOption === 'existing' ? selectedQuiz : quiz_id,
     } as ImmersiveSet;
 
     try {
