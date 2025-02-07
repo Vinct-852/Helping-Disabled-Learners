@@ -16,7 +16,7 @@ import StatCard, { StatCardProps } from './StatCard';
 const data: StatCardProps[] = [
   {
     title: 'Users',
-    value: '14k',
+    value: '14',
     interval: 'Last 30 days',
     trend: 'up',
     data: [
@@ -25,8 +25,8 @@ const data: StatCardProps[] = [
     ],
   },
   {
-    title: 'Conversions',
-    value: '325',
+    title: 'Quizzes',
+    value: '32',
     interval: 'Last 30 days',
     trend: 'down',
     data: [
@@ -35,8 +35,8 @@ const data: StatCardProps[] = [
     ],
   },
   {
-    title: 'Event count',
-    value: '200k',
+    title: 'Views count',
+    value: '200',
     interval: 'Last 30 days',
     trend: 'neutral',
     data: [
@@ -64,31 +64,15 @@ export default function MainGrid() {
             <StatCard {...card} />
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <HighlightedCard />
-        </Grid>
+{/* 
         <Grid size={{ xs: 12, md: 6 }}>
           <SessionsChart />
-        </Grid>
+        </Grid> */}
+        
         <Grid size={{ xs: 12, md: 6 }}>
           <PageViewsBarChart />
         </Grid>
       </Grid>
-      
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
-          <CustomizedDataGrid />
-        </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
-          </Stack>
-        </Grid>
-      </Grid>
-      <Copyright sx={{ my: 4 }} />
     </Box>
   );
 }
