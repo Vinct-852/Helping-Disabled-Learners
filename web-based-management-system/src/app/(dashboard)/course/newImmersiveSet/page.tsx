@@ -37,6 +37,7 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { ImmersiveSet, MongoQuiz, Quiz } from '@/types/types';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CreateQuizForm from '../../quiz/edit/CreateQuizForm';
+import { ObjectId } from 'mongodb';
 
 const ImmersiveSetCreateContent = () => {
   const router = useRouter();
@@ -100,7 +101,7 @@ const ImmersiveSetCreateContent = () => {
     const finalSet: ImmersiveSet = {
       ...formData,
       _id: '', 
-      quiz: quizOption === 'existing' ? selectedQuiz : quiz_id,
+      quiz: quizOption === 'existing' ? new ObjectId(selectedQuiz) : new ObjectId(quiz_id),
     } as ImmersiveSet;
 
     try {
