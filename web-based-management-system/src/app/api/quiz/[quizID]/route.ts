@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     const collection = db.collection('quizzes-results'); // Ensure the collection name matches
 
     // Modify the _id in the body to be an actual ObjectId
-    body.quizId = new ObjectId(body.quizId.$oid);
+    body.quizId = new ObjectId(body.quizId);
 
     const result = await collection.insertOne(body);
 
