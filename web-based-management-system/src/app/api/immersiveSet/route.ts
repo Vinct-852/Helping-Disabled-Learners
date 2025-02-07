@@ -2,7 +2,7 @@
 
 import connect from '@/app/utils/startMongo';
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -94,6 +94,74 @@ export async function POST(req: NextRequest) {
     console.error('Error creating immersive set:', error);
     return NextResponse.json(
       { error: 'Failed to create immersive set' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const immersiveID = searchParams.get("_id");
+
+  try {
+    const client = await connect;
+    const db = client.db('Teacher-Management-System');
+    const collection = db.collection('immersiveSets');
+    const coursesCollection = db.collection('courses');
+
+    if (!immersiveID || !ObjectId.isValid(immersiveID)) {
+      return NextResponse.json(
+        { error: 'Invalid immersive set ID format' },
+        { status: 400 }
+      );
+    }
+
+    const objectId = new ObjectId(immersiveID);
+
+    // Delete the immersive set
+    const deleteResult = await collection.deleteOne({ _id: objectId });
+
+    if (deleteResult.deletedCount === 0) {
+      return NextResponse.json(
+        { error: 'Immersive set not found' },
+        { status: 404 }
+      );
+    }
+
+    // Find all courses containing this immersiveSet ID
+    const coursesWithSet = await coursesCollection.find({
+      immersiveSets: objectId
+    }).toArray();
+
+    // Update each course to remove the ID from their immersiveSets array
+    const updateOperations = coursesWithSet.map(course => {
+      const updatedSets = course.immersiveSets.filter((id: ObjectId) => 
+        !id.equals(objectId)
+      );
+      
+      return {
+        updateOne: {
+          filter: { _id: course._id },
+          update: { $set: { immersiveSets: updatedSets } }
+        }
+      };
+    });
+
+    // Execute all updates in bulk
+    const updateResult = await coursesCollection.bulkWrite(updateOperations);
+
+    return NextResponse.json(
+      {
+        message: 'Immersive set deleted successfully',
+        coursesUpdated: updateResult.modifiedCount
+      },
+      { status: 200 }
+    );
+
+  } catch (error) {
+    console.error('Delete error:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete immersive set' },
       { status: 500 }
     );
   }

@@ -66,7 +66,7 @@ export default function RootLayout({
                   mt: { xs: 8, md: 0 }, 
                 }}
               >
-                <Header />
+                {/* <Header /> */}
                 {children}
               </Stack>
             </Box>

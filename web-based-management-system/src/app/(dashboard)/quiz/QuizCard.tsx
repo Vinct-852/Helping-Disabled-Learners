@@ -23,7 +23,7 @@ export const QuizCard = ({ _id, quiz }: { _id: string, quiz: Quiz }) => {
 
   const handleDeleteQuiz = async () => {
     try {
-      const response = await fetch(`/api/quiz/${_id}`, {
+      const response = await fetch(`/api/quiz/?_id=${_id}`, {
         method: 'DELETE',
       });
 
@@ -31,8 +31,8 @@ export const QuizCard = ({ _id, quiz }: { _id: string, quiz: Quiz }) => {
         throw new Error('Failed to delete quiz');
       }
 
-      // Handle successful deletion (e.g., refresh quiz list or show notification)
-      console.log('Quiz deleted successfully');
+      window.location.reload();
+
     } catch (error) {
       console.error('Error deleting quiz:', error);
     } finally {
@@ -118,8 +118,7 @@ export const QuizCard = ({ _id, quiz }: { _id: string, quiz: Quiz }) => {
             <DialogActions>
             <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
             <Button
-                // onClick={handleDeleteQuiz}
-                onClick={() => { console.log(_id); }}
+                onClick={handleDeleteQuiz}
                 color="error"
                 autoFocus
                 variant="contained"

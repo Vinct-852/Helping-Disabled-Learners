@@ -6,7 +6,6 @@ import {
   CardContent,
   CardHeader,
   Typography,
-  Button,
   Chip,
   Divider,
   Box,
@@ -17,7 +16,15 @@ import {
   Collapse,
   CardActions,
   IconButton,
-  IconButtonProps
+  IconButtonProps,
+  Menu,
+  MenuItem,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ImmersiveSet, MongoQuiz } from '@/types/types';
@@ -61,8 +68,9 @@ const VideoContainer = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   width: '100%',
   paddingTop: '56.25%',
+  // minHeight: '400px',
   borderRadius: theme.shape.borderRadius,
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(3), 
 }));
 
 const StyledIframe = styled('iframe')({
@@ -79,6 +87,43 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
   const [mongoQuiz, setQuiz] = useState<MongoQuiz | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteClick = async () => {
+    handleMenuClose();
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(`/api/immersiveSet?_id=${immersiveSet._id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete immersive set');
+      
+      setDeleteDialogOpen(false);
+    } catch (err) {
+      console.error('Delete error:', err);
+      setError('Failed to delete immersive set');
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleDuplicate = () => {
+    handleMenuClose();
+    console.log('Duplicate immersive set:', immersiveSet._id);
+    alert(`Duplicate action triggered for ${immersiveSet.title}`);
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -105,7 +150,7 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
     };
 
     fetchQuiz();
-  }, [immersiveSet.quiz]); // Add quiz ID as dependency
+  }, [immersiveSet.quiz]);
 
   if (loading) return <Typography>Loading quiz...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -117,9 +162,31 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
         titleTypographyProps={{ variant: 'h6', component: 'h1' }}
         sx={{ pb: 0 }}
         action={
-          <IconButton aria-label="settings" sx={{ ml: 2 }}>
-            <MoreVertIcon />
-          </IconButton>
+          <>
+            <IconButton 
+              aria-label="settings" 
+              sx={{ ml: 2 }}
+              onClick={handleMenuOpen}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem onClick={handleDuplicate}>Duplicate</MenuItem>
+              <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+            </Menu>
+          </>
         }
       />
       
@@ -143,8 +210,6 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
             <Divider sx={{ my: 3 }} />
           </>
         )}
-
-        <Divider />
 
         <Box sx={{ p: 2 }}>
           {mongoQuiz && (
@@ -183,15 +248,15 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
                             {question.options.map((option, optIndex) => (
                               <Typography 
                                 key={optIndex}
-                                component="div" // Change from default <p> to <div>
+                                component="div"
                                 variant="body2"
                                 sx={{
                                   p: 1,
-                                  bgcolor: optIndex === question.correctAnswerId 
+                                  bgcolor: optIndex === question.correctAnswerId-1 
                                     ? 'success.light' 
                                     : 'background.paper',
                                   borderRadius: 1,
-                                  color: optIndex === question.correctAnswerId ? 'white' : 'inherit'
+                                  color: optIndex === question.correctAnswerId-1 ? 'white' : 'inherit'
                                 }}
                               >
                                 {option.text}
@@ -210,6 +275,29 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
             </>
           )}  
         </Box>
+
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Confirm Delete?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to delete "{immersiveSet.title}"? This action cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={confirmDelete} color="error" autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+        
       </CardContent>
     </Card>
   );
