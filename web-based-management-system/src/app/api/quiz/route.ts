@@ -77,3 +77,47 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const quizID = searchParams.get("_id");
+
+  if (!quizID) {
+      return NextResponse.json(
+          { error: 'Quiz ID is required' },
+          { status: 400 }
+      );
+  }
+
+  // Validate if quizID is a valid 24-character ObjectId
+  if (!ObjectId.isValid(quizID)) {
+      return NextResponse.json(
+          { error: 'Invalid quiz ID format' },
+          { status: 400 }
+      );
+  }
+
+  try {
+      const client = await connect;
+      const db = client.db('Teacher-Management-System');
+      const collection = db.collection('quizs');
+
+      const result = await collection.deleteOne({ _id: new ObjectId(quizID) });
+
+      if (result.deletedCount === 0) {
+          return NextResponse.json(
+              { error: 'Quiz not found' },
+              { status: 404 }
+          );
+      }
+
+      return NextResponse.json({ message: 'Quiz deleted successfully' }, { status: 200 });
+
+  } catch (error) {
+      console.error('Failed to delete quiz:', error);
+      return NextResponse.json(
+          { error: 'Failed to delete quiz' },
+          { status: 500 }
+      );
+  }
+}
