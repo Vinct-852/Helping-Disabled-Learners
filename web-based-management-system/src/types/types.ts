@@ -23,11 +23,12 @@ export interface Class{
 }
 
 export interface Student {
+  _id: string;
   firstName: string;
   lastName: string;
-  class: string;
   email: string;
-  courses: Course[];
+  courses: { $oid: string }[];
+  id: string;
 }
 
 export interface Quiz {
