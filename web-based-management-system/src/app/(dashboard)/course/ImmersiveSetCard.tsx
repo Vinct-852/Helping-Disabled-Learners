@@ -112,6 +112,7 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
       if (!response.ok) throw new Error('Failed to delete immersive set');
       
       setDeleteDialogOpen(false);
+      window.location.reload();
     } catch (err) {
       console.error('Delete error:', err);
       setError('Failed to delete immersive set');
