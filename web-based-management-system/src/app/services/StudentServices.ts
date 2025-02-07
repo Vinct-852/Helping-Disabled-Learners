@@ -52,4 +52,16 @@ export class StudentService {
 
         return courses;
     }
+
+    static async getStudentByEmail(email: string): Promise<StudentObject | null>{
+        const collection = db.collection('student');
+
+        const student = await collection.findOne({ email });
+    
+        if (!student) {
+            return null
+        }
+    
+        return student as StudentObject
+    }
 }

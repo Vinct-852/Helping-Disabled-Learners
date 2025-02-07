@@ -13,15 +13,39 @@ class NavigationManager: ObservableObject {
     static let shared = NavigationManager() // Singleton instance
 }
 
+enum NavigationDestination: Hashable {
+    case courseActivity(activityId: String)
+    case quiz(quizId: String)
+    case courses
+    case performance(quizId: String)
+}
+
+
 @main
 struct xApp: App {
 
     @State private var appModel = AppModel()
+    @StateObject var navigationManager = NavigationManager.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(appModel)
+            NavigationStack(path: $navigationManager.path) {
+                LoginView()
+                    .environment(appModel)
+                    .navigationDestination(for: NavigationDestination.self) { destination in
+                        switch destination {
+                        case .courses:
+                            CoursesView()
+                        case .courseActivity(let activityId):
+                            CourseActivityView(activityId: activityId)
+                        case .quiz(let quizId):
+                            QuizView(quizId: quizId)
+                        case .performance(let quizId):
+                            QuizPerformanceView(quizId: quizId)
+                        }
+                        
+                    }
+            }
         }
         .defaultSize(CGSize(width: 1728, height: 1024))
         .windowResizability(.contentSize)
