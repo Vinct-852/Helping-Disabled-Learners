@@ -33,7 +33,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Travel Planner",
+  title: "Helping-Disabled-Learners",
   description: "",
 };
 

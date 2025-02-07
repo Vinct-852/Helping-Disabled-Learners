@@ -3,16 +3,13 @@ import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from "next/server";
 
 // GET: Fetch a student by studentId
-export async function GET(
-    request: NextRequest,
-    { params }: { params: { studentID: string } }
-) {
+export async function GET(request: NextRequest) {
     try {
       const client = await connect;
       const db = client.db('Teacher-Management-System');
       const collection = db.collection('student');
   
-      const { studentID } = params;
+      const studentID = request.nextUrl.pathname.split('/').pop();
   
       // Find the student by studentId using findOne
       const student = await collection.findOne({ "id": studentID });
@@ -35,16 +32,13 @@ export async function GET(
   }
 
 // POST: Add a new course ID to the student's courses array
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { studentID: string } }
-) {
+export async function POST(request: NextRequest) {
   try {
     const client = await connect;
     const db = client.db('Teacher-Management-System');
     const collection = db.collection('student');
 
-    const { studentID } = params;
+    const studentID = new ObjectId(request.nextUrl.pathname.split('/').pop());
     const { courseID } = await request.json();
 
     if (!ObjectId.isValid(studentID) || !ObjectId.isValid(courseID)) {
@@ -78,15 +72,12 @@ export async function POST(
 }
 
 // DELETE: Remove a course ID from the student's courses array
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { studentID: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
     const client = await connect;
     const db = client.db('Teacher-Management-System');
     const collection = db.collection('student');
-    const { studentID } = params;
+    const studentID = new ObjectId(request.nextUrl.pathname.split('/').pop());
     const { courseID } = await request.json();
 
     if (!ObjectId.isValid(studentID) || !ObjectId.isValid(courseID)) {

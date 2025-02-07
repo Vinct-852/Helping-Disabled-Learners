@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Box,
   Stepper,
@@ -36,16 +36,12 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select';
 import { ImmersiveSet, MongoQuiz, Quiz } from '@/types/types';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CreateQuizForm from '../../quiz/edit/page';
+import CreateQuizForm from '../../quiz/edit/CreateQuizForm';
+import { ObjectId } from 'mongodb';
 
-interface ImmersiveSetCreateProps {
-  courseId: string;
-  courseCode: string;
-}
-
-const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
+const ImmersiveSetCreateContent = () => {
   const router = useRouter();
-  const { searchParams } = new URL(window.location.href);
+  const searchParams = useSearchParams();
   const courseId = searchParams.get('courseId');
   const courseCode = searchParams.get('courseCode');
 
@@ -391,34 +387,11 @@ const ImmersiveSetCreate: React.FC<ImmersiveSetCreateProps> = () => {
   );
 };
 
-// Example Quiz Creation Dialog (simplified)
-const QuizCreateDialog: React.FC<{
-  open: boolean;
-  onClose: () => void;
-  onSave: (quiz: Quiz) => void;
-}> = ({ open, onClose, onSave }) => {
-  const [quizData, setQuizData] = useState<Partial<Quiz>>({});
-
+const ImmersiveSetCreate = () => {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Create New Quiz</DialogTitle>
-      <DialogContent>
-        {/* Add quiz creation form elements here */}
-        <TextField
-          label="Quiz Title"
-          fullWidth
-          sx={{ mt: 2 }}
-          value={quizData.title}
-          onChange={(e) => setQuizData({ ...quizData, title: e.target.value })}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => quizData.title && onSave(quizData as Quiz)}>
-          Save
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ImmersiveSetCreateContent />
+    </Suspense>
   );
 };
 
