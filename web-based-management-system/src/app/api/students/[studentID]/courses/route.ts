@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // GET: Fetch a student by studentId
 export async function GET(
     request: NextRequest,
-    { params }: { params: { studentID: string } }
+    { params }: { params: Promise<{ studentID: string }> }
 ) {
     try {
   
