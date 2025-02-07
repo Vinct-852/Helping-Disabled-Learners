@@ -33,9 +33,9 @@ struct CoursesView: View {
                             
                             LazyVGrid(columns: columns, spacing: 20) {
                                 ForEach(viewModel.courses, id: \.self) { course in
-                                    NavigationLink {
-                                        SingleCourseView(courseCode: course.courseCode)
-                                    } label: {
+                                    Button(action: {
+                                        NavigationManager.shared.path.append(NavigationDestination.singleCourse(courseCode: course.courseCode))
+                                    }){
                                         CourseCardView(course: course)
                                     }
                                     .buttonStyle(PlainButtonStyle())

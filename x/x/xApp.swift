@@ -18,6 +18,7 @@ enum NavigationDestination: Hashable {
     case quiz(quizId: String)
     case courses
     case performance(quizId: String)
+    case singleCourse(courseCode: String)
 }
 
 
@@ -36,6 +37,8 @@ struct xApp: App {
                         switch destination {
                         case .courses:
                             CoursesView()
+                        case .singleCourse(let courseCode):
+                            SingleCourseView(courseCode: courseCode)
                         case .courseActivity(let activityId):
                             CourseActivityView(activityId: activityId)
                         case .quiz(let quizId):
