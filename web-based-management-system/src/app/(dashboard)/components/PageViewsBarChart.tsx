@@ -18,7 +18,7 @@ export default function PageViewsBarChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Page views and downloads
+          
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -30,12 +30,11 @@ export default function PageViewsBarChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              1.3M
+            Engagement Metrics
             </Typography>
-            <Chip size="small" color="error" label="-8%" />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Page views and downloads for the last 6 months
+            Video views and quizzes done in the past 7 days
           </Typography>
         </Stack>
         <BarChart
@@ -46,27 +45,21 @@ export default function PageViewsBarChart() {
               {
                 scaleType: 'band',
                 categoryGapRatio: 0.5,
-                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
               },
             ] as any
           }
           series={[
             {
-              id: 'page-views',
-              label: 'Page views',
-              data: [2234, 3872, 2998, 4125, 3357, 2789, 2998],
+              id: 'video-views',
+              label: 'Video views',
+              data: [15, 20, 10, 22, 17, 19, 21],
               stack: 'A',
             },
             {
-              id: 'downloads',
-              label: 'Downloads',
-              data: [3098, 4215, 2384, 2101, 4752, 3593, 2384],
-              stack: 'A',
-            },
-            {
-              id: 'conversions',
-              label: 'Conversions',
-              data: [4051, 2275, 3129, 4693, 3904, 2038, 2275],
+              id: 'quizzes-done',
+              label: 'Quizzes done',
+              data: [8, 9, 8, 9, 10, 7, 8],
               stack: 'A',
             },
           ]}
