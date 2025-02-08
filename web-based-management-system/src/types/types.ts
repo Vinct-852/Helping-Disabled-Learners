@@ -47,7 +47,7 @@ export interface ImmersiveSet {
   video_url: string;
   topics?: string[];
   quiz?: ObjectId;
-  videoType?: 'youtube' | 'upload';
+  videoType?: 'youtube' | 'upload' | 'vr';
   videoFile?: File;
 }
 
