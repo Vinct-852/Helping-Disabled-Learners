@@ -97,7 +97,7 @@ const ImmersiveSetCreateContent = () => {
   };
 
   const handleSubmit = async (quiz_id?: string) => {
-    formData.video_url = "https://www.youtube.com/embed/"+formData.video_url;
+    if(formData.videoType === 'youtube') formData.video_url = "https://www.youtube.com/embed/"+formData.video_url;
     const finalSet: ImmersiveSet = {
       ...formData,
       _id: '', 
@@ -175,10 +175,11 @@ const ImmersiveSetCreateContent = () => {
                 <RadioGroup
                     row
                     value={formData.videoType || 'youtube'}
-                    onChange={(e) => setFormData({ ...formData, videoType: e.target.value as 'youtube' | 'upload' })}
+                    onChange={(e) => setFormData({ ...formData, videoType: e.target.value as 'youtube' | 'upload' | 'vr' })}
                 >
                     <FormControlLabel value="youtube" control={<Radio />} label="YouTube URL" />
                     <FormControlLabel value="upload" control={<Radio />} label="Upload Video" />
+                    <FormControlLabel value="vr" control={<Radio />} label="VR Video URL" />
                 </RadioGroup>
             </FormControl>
         
@@ -197,6 +198,16 @@ const ImmersiveSetCreateContent = () => {
                     </InputAdornment>
                 ),
                 }}
+            />
+            ) : formData.videoType === 'vr' ? (
+            <TextField
+                label="VR Video URL"
+                name="video_url"
+                value={formData.video_url}
+                onChange={handleInputChange}
+                required
+                fullWidth
+                placeholder="https://example.com/vr-video"
             />
             ) : (
             <Box>
@@ -232,7 +243,7 @@ const ImmersiveSetCreateContent = () => {
 
             <TextField
             label="Topics"
-            value={topicInput} // New state for input control
+            value={topicInput}
             onChange={(e) => setTopicInput(e.target.value)}
             onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -242,7 +253,7 @@ const ImmersiveSetCreateContent = () => {
                     ...prev,
                     topics: [...(prev.topics || []), topicInput.trim()]
                     }));
-                    setTopicInput(''); // Clear input after adding
+                    setTopicInput('');
                 }
                 }
             }}
@@ -268,7 +279,7 @@ const ImmersiveSetCreateContent = () => {
             fullWidth
             />
         </Box>
-      )}
+    )}
 
     {activeStep === 1 && (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
