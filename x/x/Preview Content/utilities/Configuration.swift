@@ -14,6 +14,6 @@ class Configuration {
     
     var baseURL: String {
         // Replace with your actual base URL
-        return "http://10.11.15.121:3000/api"
+        return "https://helping-disabled-learners.vercel.app/api"
     }
 }
