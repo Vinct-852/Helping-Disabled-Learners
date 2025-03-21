@@ -44,22 +44,38 @@ struct LoginView: View {
                             .foregroundColor(.red)
                     }
                    
-                    
-                    Button("Login") {
+                    Button(action: {
                         Task {
                             let success = await auth.login(email: email, password: password)
                             if !success {
                                 isError = true
                             }
                         }
+                    }){
+                        Text("Login")
+                            .font(.system(size: 24, weight: .bold))
+                            .padding(.horizontal, 96)
+                            .padding(.vertical, 20)
+//                            .background(Color("darkGreen"))
+                            .foregroundColor(.white)
+                            .cornerRadius(64)
                     }
-                    .font(.system(size: 24, weight: .bold))
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color("darkGreen"))
-                    .foregroundColor(.white)
-                    .cornerRadius(64)
-                    .buttonStyle(PlainButtonStyle())
+                    
+//                    Button("Login") {
+//                        Task {
+//                            let success = await auth.login(email: email, password: password)
+//                            if !success {
+//                                isError = true
+//                            }
+//                        }
+//                    }
+//                    .font(.system(size: 24, weight: .bold))
+//                    .padding()
+//                    .frame(maxWidth: .infinity)
+//                    .background(Color("darkGreen"))
+//                    .foregroundColor(.white)
+//                    .cornerRadius(64)
+////                    .buttonStyle(PlainButtonStyle())
                 }
                 .frame(width: 600)
                 .padding(96)

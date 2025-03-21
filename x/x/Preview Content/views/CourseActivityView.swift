@@ -11,6 +11,7 @@ import WebKit
 struct CourseActivityView: View {
     @StateObject private var viewModel = CourseActivityViewModel()
     @ObservedObject var auth = AuthManager.shared
+    @ObservedObject var immersiveManager = ImmersiveManager.shared
     let activityId: String
     var body: some View {
         GeometryReader { geometry in
@@ -30,6 +31,7 @@ struct CourseActivityView: View {
                         // Left Column: Video and Description
                         CourseActivityVideoSection(activity: activity)
                             .frame(width: geometry.size.width * 0.6)
+                            
                         
                         // Right Column: Instructions and Quiz Button
                         CourseActivityInstructionsSection(activity: activity)
@@ -51,16 +53,23 @@ struct CourseActivityView: View {
 
 // MARK: - Video Section (Left Column)
 struct CourseActivityVideoSection: View {
+    @ObservedObject var immersiveManager = ImmersiveManager.shared
     let activity: CourseActivity
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-//            VideoPlayerView()
-//                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fill)
-//                .frame(maxWidth: .infinity)
-//                .cornerRadius(24)
-            YoutubeVideoPlayeView(videoUrl: activity.video_url)
-                .frame(width: .infinity)
-                .cornerRadius(24)
+            if activity.videoType == "vr" {
+                VideoPlayerView()
+                    .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .cornerRadius(24)
+            }
+            else {
+                YoutubeVideoPlayeView(videoUrl: activity.video_url)
+                    .frame(width: .infinity)
+                    .cornerRadius(24)
+            }
+
+            
             
             VStack(alignment: .leading, spacing: 16) {
                 HStack{
@@ -80,6 +89,10 @@ struct CourseActivityVideoSection: View {
                 
                 Text("This lecture covers the topics, including definition of interactive proofs (IP), the sum-check Protocol, and the application of interactive proof for #SAT.")
                     .font(.system(size: 28, weight: .regular))
+                
+                if activity.videoType == "vr" {
+                    ImmersiveControl()
+                }
             }
         }
         .padding(24)
@@ -89,6 +102,13 @@ struct CourseActivityVideoSection: View {
             RoundedRectangle(cornerRadius: 32)
                 .stroke(Color.white.opacity(0.10), lineWidth: 3)
         )
+        .onAppear() {
+            if activity.videoType == "vr" {
+                print(activity.video_url)
+//                immersiveManager.url = activity.video_url
+                immersiveManager.url = "https://res.cloudinary.com/nowo-ltd/video/upload/v1738993654/visionpropro/Multivrs_360_Medical_Experience_jvfs3i.mp4"
+            }
+        }
     }
 }
 
@@ -144,16 +164,14 @@ struct CourseActivityInstructionsSection: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 96)
                         .padding(.vertical, 20)
-                        .background(Color.black)
                         .cornerRadius(64)
+
                 }
-                .buttonStyle(PlainButtonStyle())
             }
             
          
             
-           
-            Spacer()
+                         Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(24)
@@ -163,6 +181,32 @@ struct CourseActivityInstructionsSection: View {
             RoundedRectangle(cornerRadius: 32)
                 .stroke(Color.white.opacity(0.10), lineWidth: 3)
         )
+    }
+}
+
+struct ImmersiveControl: View {
+    
+    @Environment(\.openImmersiveSpace) private var openImmersiveSpace
+    
+    //Environment Propery Wrapper for closing a ImmersiveSpace
+    @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    
+    //Boolean to check if ImmersiveSpace is active
+    @State private var immersiveSpaceActive: Bool = false
+    var body: some View {
+        Button(immersiveSpaceActive ? "Turn Off Immersive Mode" : "Turn On Immersive mode") {
+            Task {
+                if !immersiveSpaceActive {
+                    let result = await openImmersiveSpace(id: "VideoPlayer360")
+                    immersiveSpaceActive = true
+                } else {
+                    
+                    
+                    await dismissImmersiveSpace()
+                    immersiveSpaceActive = false
+                }
+            }
+        }
     }
 }
 

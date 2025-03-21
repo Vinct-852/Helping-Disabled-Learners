@@ -16,7 +16,7 @@ struct VideoPlayerView: UIViewControllerRepresentable {
         controller.player = AVPlayer()
         
         // Replace with a valid URL string pointing to a media resource
-        if let url = URL.init(string: "https://res.cloudinary.com/nowo-ltd/video/upload/v1738410853/visionpropro/sample_video_tcsfue.mp4") {
+        if let url = URL.init(string: "https://res.cloudinary.com/nowo-ltd/video/upload/v1738993654/visionpropro/Multivrs_360_Medical_Experience_jvfs3i.mp4") {
             let playerItem = AVPlayerItem.init(url: url)
             controller.player?.replaceCurrentItem(with: playerItem)
         }

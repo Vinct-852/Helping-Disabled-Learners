@@ -164,6 +164,6 @@ struct CustomAlertView: View {
     }
 }
 
-//#Preview {
-//    QuizView(quizId: "6798e34e901eefe0e8cbebff", navigationPath: $testPath)
-//}
+#Preview {
+    QuizView(quizId: "6798e34e901eefe0e8cbebff")
+}

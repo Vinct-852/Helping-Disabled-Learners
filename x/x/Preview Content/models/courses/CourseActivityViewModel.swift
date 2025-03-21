@@ -26,6 +26,8 @@ class CourseActivityViewModel: ObservableObject {
                 url: URL(string: "\(Configuration.shared.baseURL)/students/\(studentId)/immersiveSets/\(activityId)")
             )
             self.activity = activity
+            
+
         } catch let networkError as NetworkError {
             self.error = networkError
         } catch {

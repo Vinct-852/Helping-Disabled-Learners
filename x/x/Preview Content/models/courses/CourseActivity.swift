@@ -14,5 +14,6 @@ struct CourseActivity: Codable {
     let quiz: String
     let topics: [String]
     let completed: Bool
+    let videoType: String?
 }
 

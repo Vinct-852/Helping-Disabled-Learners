@@ -25,7 +25,7 @@ struct QuestionFooterView: View {
                     .font(.system(size: 24, weight: .bold))
                     .padding(.horizontal, 96)
                     .padding(.vertical, 20)
-                    .background(currentQuestionIndex>0 ? Color.black : .white.opacity(0.15))
+                    .background(currentQuestionIndex>0 ? Color.gray : .white.opacity(0.10))
                     .foregroundColor(.white)
                     .cornerRadius(64)
             }
@@ -56,7 +56,7 @@ struct QuestionFooterView: View {
                     .font(.system(size: 24, weight: .bold))
                     .padding(.horizontal, 96)
                     .padding(.vertical, 20)
-                    .background(Color.black)
+                    .background(Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(64)
                 :

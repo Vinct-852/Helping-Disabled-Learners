@@ -24,6 +24,8 @@ enum NavigationDestination: Hashable {
 
 @main
 struct xApp: App {
+    @State private var immersionStyle: ImmersionStyle = .full //For example you also can use .mixed for a mixed ImmersionStyle
+
 
     @State private var appModel = AppModel()
     @StateObject var navigationManager = NavigationManager.shared
@@ -53,16 +55,9 @@ struct xApp: App {
         .defaultSize(CGSize(width: 1728, height: 1024))
         .windowResizability(.contentSize)
 
-        ImmersiveSpace(id: appModel.immersiveSpaceID) {
-            ImmersiveView()
-                .environment(appModel)
-                .onAppear {
-                    appModel.immersiveSpaceState = .open
-                }
-                .onDisappear {
-                    appModel.immersiveSpaceState = .closed
-                }
-        }
-        .immersionStyle(selection: .constant(.mixed), in: .mixed)
+        ImmersiveSpace(id: "VideoPlayer360") {
+            //struct with the RealityView
+            Video360EntityTestRV()
+        }.immersionStyle(selection: $immersionStyle, in: .full)
      }
 }
