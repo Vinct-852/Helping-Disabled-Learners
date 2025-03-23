@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Box, Typography, Button, Stack, Chip, Divider, CircularProgress, Grid, Accordion, AccordionSummary, AccordionDetails, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Box, Typography, Button, Stack, Chip, Divider, CircularProgress, Grid2 as Grid, Accordion, AccordionSummary, AccordionDetails, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { Course, ImmersiveSet, Student } from '@/types/types';
 import ImmersiveSetCard from '../ImmersiveSetCard'; // Import the component
 import StudentList from '@/app/(dashboard)/course/StudentList';
@@ -204,24 +204,29 @@ const CourseDetailPage = () => {
 
       {/* Immersive Sets Section */}
       <Stack spacing={0.3}>
-        <Typography variant="h5" component="h2">
-          Immersive Sets
-        </Typography>
+        <div className=' flex justify-between items-center'>
+          <Typography variant="h5" component="h2">
+            Immersive Sets
+          </Typography>
+          
+          <button
+              onClick={handleAddSet}
+              className='bg-black text-white font-medium py-2 px-4 rounded-md dark:bg-white dark:text-black'
+            >
+              Add New Immersive Set
+          </button>
+        </div>
         
-        <Button
-            variant="contained"
-            onClick={handleAddSet}
-            sx={{ mb: 3 }}
-          >
-            Add New Immersive Set
-        </Button>
 
-        <Grid container spacing={5}>
-          {immersiveSets.map((set) => (
-            <ImmersiveSetCard
-              key={set._id} 
-              immersiveSet={set} 
-            />
+        <Grid container spacing={2}>
+          {immersiveSets.map((set, index) => (
+            <Grid key={index} size={{ xs: 2, sm: 4, md: 4 }}>
+               <ImmersiveSetCard
+                key={set._id} 
+                immersiveSet={set} 
+              />
+            </Grid>
+           
           ))}
         </Grid>
 

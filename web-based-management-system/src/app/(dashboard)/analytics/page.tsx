@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   TextField,
@@ -17,10 +17,14 @@ import {
   TableRow,
   Paper,
   LinearProgress,
-  Divider
+  Divider,
+  InputLabel,
+  FormControl,
+  Select,
+  MenuItem
 } from '@mui/material';
 import { PieChart, BarChart } from '@mui/x-charts';
-import type { MongoQuiz } from '@/types/types';
+import type { MongoQuiz, Student } from '@/types/types';
 import MainGrid from '../components/MainGrid';
 
 interface QuizResult {
@@ -61,6 +65,22 @@ export default function StudentQuizAnalysis() {
   const [studentId, setStudentId] = useState('');
   const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
   const [quizzes, setQuizzes]= useState<MongoQuiz[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await fetch(`/api/students`);
+      if (!response.ok) throw new Error('Failed to fetch students');
+      const data = await response.json();
+      setStudents(data);
+    } catch (error) {
+      setError('Failed to fetch students');
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   const fetchQuizResults = async () => {
     if (!studentId) return;
@@ -126,28 +146,41 @@ export default function StudentQuizAnalysis() {
 
   return (
     
-    <Box sx={{ p: 3, maxWidth: 1200, margin: '0 auto' }}>
+    <div className=' w-full'>
       
         <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
             Student Quiz Analysis
         </Typography>    
-      <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-        <TextField
-          label="Student ID"
-          value={studentId}
-          onChange={(e) => { setStudentId(e.target.value) }}
-          variant="outlined"
-          disabled={loading}
-          fullWidth
-        />
+      <Box sx={{ display: 'flex', gap: 2, mb: 4, minWidth: 900 }}>
+        <FormControl fullWidth>
+          <InputLabel id="select-student-label">Student</InputLabel>
+          <Select
+            labelId="select-student-label"
+            id="select-box-student"
+            value={studentId}
+            label="Student"
+            onChange={event => setStudentId(event.target.value)}
+            fullWidth
+            disabled={students.length === 0}
+          >
+            {
+              students.map((student) => (
+                <MenuItem key={student._id} value={student._id}>{student.firstName} {student.lastName}</MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
+
         <Button
           variant="contained"
           onClick={fetchQuizResults}
-          disabled={loading || !studentId}
+          // disabled={loading || !studentId}
           sx={{ minWidth: 120 }}
         >
           {loading ? 'Loading...' : 'Analyze'}
         </Button>
+
+        
       </Box>
 
       {error && (
@@ -283,7 +316,7 @@ export default function StudentQuizAnalysis() {
         </>
       )}
         <Divider sx={{ my: 4 }} />
-        <MainGrid/>
-    </Box>
+        {/* <MainGrid/> */}
+    </div>
   );
 }
