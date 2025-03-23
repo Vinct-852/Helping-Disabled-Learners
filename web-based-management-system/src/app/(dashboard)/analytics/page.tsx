@@ -151,7 +151,7 @@ export default function StudentQuizAnalysis() {
         <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
             Student Quiz Analysis
         </Typography>    
-      <Box sx={{ display: 'flex', gap: 2, mb: 4, minWidth: 900 }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 4, minWidth:1200 }}>
         <FormControl fullWidth>
           <InputLabel id="select-student-label">Student</InputLabel>
           <Select
