@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { CourseCard } from './CourseCard';
 import { Course } from '@/types/types';
 import Header from '../components/Header';
+import { dummyCourses } from '@/data/dummyData';
 
 export default function CoursePage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -18,6 +19,15 @@ export default function CoursePage() {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      // Check if we're in development mode
+      if (process.env.NODE_ENV === 'development') {
+        // Use dummy data in development mode
+        setCourses(dummyCourses);
+        setLoading(false);
+        return;
+      }
+      
+      // Fetch real data in production
       try {
         const response = await fetch('/api/course');
         if (!response.ok) throw new Error('Failed to fetch courses');

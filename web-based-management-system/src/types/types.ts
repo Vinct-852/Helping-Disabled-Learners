@@ -5,13 +5,67 @@ export interface MongoQuiz {
   quiz: Quiz;
 }
 
-export interface Question {
+// Base question interface
+export interface BaseQuestion {
   id: number;
+  type: QuestionType;
   question: string;
+}
+
+export type QuestionType = 'multipleChoice' | 'matching' | 'ordering' | 'likertScale';
+
+// Multiple Choice Question
+export interface MultipleChoiceQuestion extends BaseQuestion {
+  type: 'multipleChoice';
   options: Option[];
   correctAnswerId: number;
 }
 
+// Matching Question
+export interface MatchingQuestion extends BaseQuestion {
+  type: 'matching';
+  pairs: MatchingPair[];
+  correctPairs: MatchingAnswer[];
+}
+
+export interface MatchingPair {
+  id: number;
+  left: string;
+  right: string;
+}
+
+export interface MatchingAnswer {
+  leftId: number;
+  rightId: number;
+}
+
+// Ordering Question
+export interface OrderingQuestion extends BaseQuestion {
+  type: 'ordering';
+  items: OrderingItem[];
+  correctOrder: number[];
+}
+
+export interface OrderingItem {
+  id: number;
+  text: string;
+}
+
+// Likert Scale Question
+export interface LikertScaleQuestion extends BaseQuestion {
+  type: 'likertScale';
+  statement: string;
+  scalePoints: number;
+  scaleLabels: ScaleLabel[];
+  feedback?: Record<string, string>;
+}
+
+export interface ScaleLabel {
+  value: number;
+  label: string;
+}
+
+// Original Option interface for multiple choice
 export interface Option {
   id: number;
   text: string;
@@ -30,6 +84,9 @@ export interface Student {
   courses: { $oid: string }[];
   id: string;
 }
+
+// Updated Question type to be a union of all question types
+export type Question = MultipleChoiceQuestion | MatchingQuestion | OrderingQuestion | LikertScaleQuestion;
 
 export interface Quiz {
   title: string;

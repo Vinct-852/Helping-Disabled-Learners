@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { QuizCard } from './QuizCard';
 import { MongoQuiz } from '@/types/types';
 import Header from '../components/Header';
+import { dummyQuizzes } from '@/data/dummyData';
 
 export default function QuizPage() {
   const [quizzes, setQuizzes] = useState<MongoQuiz[]>([]);
@@ -18,6 +19,15 @@ export default function QuizPage() {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
+      // Check if we're in development mode
+      if (process.env.NODE_ENV === 'development') {
+        // Use dummy data in development mode
+        setQuizzes(dummyQuizzes);
+        setLoading(false);
+        return;
+      }
+      
+      // Fetch real data in production
       try {
         const response = await fetch('/api/quiz');
         if (!response.ok) throw new Error('Failed to fetch quizzes');

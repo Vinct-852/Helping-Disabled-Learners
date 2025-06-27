@@ -1,0 +1,115 @@
+{
+  "quiz": {
+    "id": 1,
+    "title": "Enhanced Question Types Quiz",
+    "description": "A quiz demonstrating various question types including multiple choice, matching, ordering, and Likert scale.",
+    "author": "John Doe",
+    "creationDate": "2025-01-24",
+    "category": "General Knowledge",
+    "difficulty": "Mixed",
+    "questions": [
+      {
+        "id": 1,
+        "type": "multipleChoice",
+        "question": "What is the capital of France?",
+        "options": [
+          { "id": 1, "text": "Berlin" },
+          { "id": 2, "text": "Madrid" },
+          { "id": 3, "text": "Paris" },
+          { "id": 4, "text": "Rome" }
+        ],
+        "correctAnswerId": 3
+      },
+      {
+        "id": 2,
+        "type": "multipleChoice",
+        "question": "Which planet is known as the Red Planet?",
+        "options": [
+          { "id": 1, "text": "Earth" },
+          { "id": 2, "text": "Mars" },
+          { "id": 3, "text": "Jupiter" },
+          { "id": 4, "text": "Saturn" }
+        ],
+        "correctAnswerId": 2
+      },
+      {
+        "id": 3,
+        "type": "matching",
+        "question": "Match the countries with their capitals",
+        "pairs": [
+          {
+            "id": 1,
+            "left": "France",
+            "right": "Paris"
+          },
+          {
+            "id": 2,
+            "left": "Japan",
+            "right": "Tokyo"
+          },
+          {
+            "id": 3,
+            "left": "Egypt",
+            "right": "Cairo"
+          },
+          {
+            "id": 4,
+            "left": "Australia",
+            "right": "Canberra"
+          }
+        ],
+        "correctPairs": [
+          {"leftId": 1, "rightId": 1},
+          {"leftId": 2, "rightId": 2},
+          {"leftId": 3, "rightId": 3},
+          {"leftId": 4, "rightId": 4}
+        ]
+      },
+      {
+        "id": 4,
+        "type": "ordering",
+        "question": "Place these events in chronological order, from earliest to latest",
+        "items": [
+          { "id": 1, "text": "World War II" },
+          { "id": 2, "text": "Moon Landing" },
+          { "id": 3, "text": "Fall of the Berlin Wall" },
+          { "id": 4, "text": "World War I" }
+        ],
+        "correctOrder": [4, 1, 2, 3]
+      },
+      {
+        "id": 5,
+        "type": "likertScale",
+        "question": "How satisfied are you with the course materials?",
+        "statement": "The course materials were helpful for my learning.",
+        "scalePoints": 5,
+        "scaleLabels": [
+          { "value": 1, "label": "Strongly Disagree" },
+          { "value": 2, "label": "Disagree" },
+          { "value": 3, "label": "Neutral" },
+          { "value": 4, "label": "Agree" },
+          { "value": 5, "label": "Strongly Agree" }
+        ],
+        "feedback": {
+          "1": "We're sorry to hear that. We'll work to improve our materials.",
+          "2": "Thank you for your feedback. We'll consider how to make improvements.",
+          "3": "We appreciate your neutral feedback.",
+          "4": "We're glad you found the materials helpful.",
+          "5": "Excellent! We're thrilled the materials were very helpful."
+        }
+      },
+      {
+        "id": 6,
+        "type": "multipleChoice",
+        "question": "What is the largest ocean on Earth?",
+        "options": [
+          { "id": 1, "text": "Atlantic Ocean" },
+          { "id": 2, "text": "Indian Ocean" },
+          { "id": 3, "text": "Arctic Ocean" },
+          { "id": 4, "text": "Pacific Ocean" }
+        ],
+        "correctAnswerId": 4
+      }
+    ]
+  }
+}
