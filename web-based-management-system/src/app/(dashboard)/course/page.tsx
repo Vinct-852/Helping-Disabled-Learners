@@ -20,12 +20,12 @@ export default function CoursePage() {
   useEffect(() => {
     const fetchCourses = async () => {
       // Check if we're in development mode
-      if (process.env.NODE_ENV === 'development') {
-        // Use dummy data in development mode
-        setCourses(dummyCourses);
-        setLoading(false);
-        return;
-      }
+      // if (process.env.NODE_ENV === 'development') {
+      //   // Use dummy data in development mode
+      //   setCourses(dummyCourses);
+      //   setLoading(false);
+      //   return;
+      // }
       
       // Fetch real data in production
       try {

@@ -27,7 +27,19 @@ import {
   DialogTitle
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ImmersiveSet, MongoQuiz } from '@/types/types';
+import { 
+  ImmersiveSet, 
+  MongoQuiz, 
+  Question, 
+  MultipleChoiceQuestion,
+  MatchingQuestion,
+  OrderingQuestion,
+  LikertScaleQuestion,
+  MatchingPair,
+  OrderingItem,
+  ScaleLabel,
+  Option 
+} from '@/types/types';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
@@ -227,51 +239,114 @@ const ImmersiveSetCard: React.FC<ImmersiveSetProps> = ({ immersiveSet }) => {
               </Stack>
 
               <CardActions disableSpacing>
-                  <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
+                <ExpandMore
+                  expand={expanded}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <ExpandMoreIcon />
+                </ExpandMore>
               </CardActions>
               <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <List sx={{ mt: 3 }}>
-                  {mongoQuiz.quiz.questions.map((question, index) => (
-                    <React.Fragment key={question.question}>
-                      <ListItem alignItems="flex-start">
-                      <ListItemText
-                        primary={`${index + 1}. ${question.question}`}
-                        primaryTypographyProps={{ component: "div" }}
-                        secondary={
-                          <Stack spacing={1} sx={{ mt: 1 }}>
-                            {question.options.map((option, optIndex) => (
-                              <Typography 
-                                key={optIndex}
-                                component="div"
-                                variant="body2"
-                                sx={{
-                                  p: 1,
-                                  bgcolor: optIndex === question.correctAnswerId-1 
-                                    ? 'success.light' 
-                                    : 'background.paper',
-                                  borderRadius: 1,
-                                  color: optIndex === question.correctAnswerId-1 ? 'white' : 'inherit'
-                                }}
-                              >
-                                {option.text}
-                              </Typography>
-                            ))}
-                          </Stack>
-                        }
-                        secondaryTypographyProps={{ component: "div" }}
-                      />
-                      </ListItem>
-                      {index < mongoQuiz.quiz.questions.length - 1 && <Divider />}
-                    </React.Fragment>
-                  ))}
-                </List>
+                {mongoQuiz.quiz.questions && (
+                  <List sx={{ mt: 3 }}>
+                    {mongoQuiz.quiz.questions.map((question, index) => (
+                      <React.Fragment key={question.id}>
+                        <ListItem alignItems="flex-start">
+                          <ListItemText
+                            primary={`${index + 1}. ${question.question}`}
+                            primaryTypographyProps={{ component: "div" }}
+                            secondary={
+                              <Stack spacing={1} sx={{ mt: 1 }}>
+                                {(!question.type || question.type === 'multipleChoice') && (question as MultipleChoiceQuestion).options?.map((option: Option, optIndex: number) => (
+                                  <Typography 
+                                    key={optIndex}
+                                    component="div"
+                                    variant="body2"
+                                    sx={{
+                                      p: 1,
+                                      bgcolor: optIndex === (question as MultipleChoiceQuestion).correctAnswerId-1 
+                                        ? 'success.light' 
+                                        : 'background.paper',
+                                      borderRadius: 1,
+                                      color: optIndex === (question as MultipleChoiceQuestion).correctAnswerId-1 ? 'white' : 'inherit'
+                                    }}
+                                  >
+                                    {option.text}
+                                  </Typography>
+                                ))}
+                                
+                                {question.type === 'matching' && (question as MatchingQuestion).pairs?.map((pair: MatchingPair, pairIndex: number) => (
+                                  <Box 
+                                    key={pair.id}
+                                    sx={{ 
+                                      display: 'flex', 
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center',
+                                      p: 1,
+                                      mb: 1,
+                                      bgcolor: 'background.paper',
+                                      borderRadius: 1
+                                    }}
+                                  >
+                                    <Typography>{pair.left}</Typography>
+                                    <Typography>→</Typography>
+                                    <Typography>{pair.right}</Typography>
+                                  </Box>
+                                ))}
+
+                                {question.type === 'ordering' && (
+                                  <Box>
+                                    <Typography variant="subtitle2" sx={{ mb: 1 }}>Correct Order:</Typography>
+                                    {(question as OrderingQuestion).correctOrder?.map((itemId: number, index: number) => {
+                                      const item = (question as OrderingQuestion).items?.find((i: OrderingItem) => i.id === itemId);
+                                      return item && (
+                                        <Typography
+                                          key={itemId}
+                                          sx={{
+                                            p: 1,
+                                            mb: 0.5,
+                                            bgcolor: 'background.paper',
+                                            borderRadius: 1
+                                          }}
+                                        >
+                                          {index + 1}. {item.text}
+                                        </Typography>
+                                      );
+                                    })}
+                                  </Box>
+                                )}
+
+                                {question.type === 'likertScale' && (
+                                  <Box>
+                                    <Typography variant="subtitle2" sx={{ mb: 1 }}>{(question as LikertScaleQuestion).statement}</Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                                      {(question as LikertScaleQuestion).scaleLabels?.map((label: ScaleLabel) => (
+                                        <Typography
+                                          key={label.value}
+                                          variant="body2"
+                                          sx={{
+                                            textAlign: 'center',
+                                            maxWidth: '100px'
+                                          }}
+                                        >
+                                          {label.label}
+                                        </Typography>
+                                      ))}
+                                    </Box>
+                                  </Box>
+                                )}
+                              </Stack>
+                            }
+                            secondaryTypographyProps={{ component: "div" }}
+                          />
+                        </ListItem>
+                        {index < (mongoQuiz.quiz.questions.length - 1) && <Divider />}
+                      </React.Fragment>
+                    ))}
+                  </List>
+                )}
               </Collapse>
             </>
           )}  

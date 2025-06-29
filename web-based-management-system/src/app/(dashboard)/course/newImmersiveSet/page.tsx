@@ -53,7 +53,7 @@ const ImmersiveSetCreateContent = () => {
     videoType: 'youtube'
   });
   const [quizOption, setQuizOption] = useState<'existing' | 'new'>('existing');
-  const [existingQuizzes, setExistingQuizzes] = useState<MongoQuiz[]>([]);
+  const [existingQuizzes, setExistingQuizzes] = useState<MongoQuiz[]>([]); // Initialize with empty array
   const [selectedQuiz, setSelectedQuiz] = useState<string>('');
   const [newQuiz, setNewQuiz] = useState<MongoQuiz | null>(null);
   const [openQuizDialog, setOpenQuizDialog] = useState(false);

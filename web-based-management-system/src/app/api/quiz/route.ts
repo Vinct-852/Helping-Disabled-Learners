@@ -50,20 +50,17 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     
-    // Validate required fields
-    // TODO
-
+    // Extract the quiz object from the nested structure if it exists
+    const quizDocument = body;
+    
     const client = await connect;
     const db = client.db('Teacher-Management-System');
     const collection = db.collection('quizs');
 
-    // Create the quiz document structure
-    const quizDocument = { quiz: body };
-
     // Insert new quiz and get the generated ID
     const result = await collection.insertOne(quizDocument);
     
-    // Return the new quiz ID with the quiz data nested under "quiz"
+    // Return the new quiz ID with the quiz data
     return NextResponse.json(
       { _id: result.insertedId, ...quizDocument },
       { status: 201 }

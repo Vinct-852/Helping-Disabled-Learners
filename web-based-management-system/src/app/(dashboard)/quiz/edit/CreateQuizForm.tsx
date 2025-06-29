@@ -46,7 +46,7 @@ interface CreateQuizFormProps {
 }
 
 // Define initial quiz data outside the component to ensure it's consistent
-const initialQuizData: Quiz = {
+const initialquiz: Quiz = {
   title: '',
   description: '',
   author: '',
@@ -69,7 +69,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
   immersiveSetCreation = false
 }) => {
   // Use the predefined initial state
-  const [quizData, setQuizData] = useState<Quiz>(initialQuizData);
+  const [quiz, setquiz] = useState<Quiz>(initialquiz);
 
   // Load the component only on the client side to avoid hydration issues
   const [isClient, setIsClient] = useState(false);
@@ -87,7 +87,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ quiz: quizData }),
+        body: JSON.stringify({ quiz: quiz }),
       });
 
       if (response.ok) {
@@ -107,7 +107,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
   // Add question with specified type
   const addQuestion = (type: QuestionType) => {
     let newQuestion: Question;
-    const nextId = quizData.questions.length + 1;
+    const nextId = quiz.questions.length + 1;
 
     switch (type) {
       case 'multipleChoice':
@@ -177,30 +177,30 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
         return;
     }
     
-    setQuizData({ ...quizData, questions: [...quizData.questions, newQuestion] });
+    setquiz({ ...quiz, questions: [...quiz.questions, newQuestion] });
   };
 
   // Delete question
   const deleteQuestion = (questionIndex: number) => {
-    const updatedQuestions = quizData.questions.filter((_, idx) => idx !== questionIndex);
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    const updatedQuestions = quiz.questions.filter((_, idx) => idx !== questionIndex);
+    setquiz({ ...quiz, questions: updatedQuestions });
   };
 
   // Add option for multiple choice questions
   const addOption = (questionIndex: number) => {
-    const updatedQuestions = [...quizData.questions];
+    const updatedQuestions = [...quiz.questions];
     const question = updatedQuestions[questionIndex] as MultipleChoiceQuestion;
     
     if (question.type !== 'multipleChoice') return;
     
     const newOptionId = question.options.length + 1;
     question.options.push({ id: newOptionId, text: '' });
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    setquiz({ ...quiz, questions: updatedQuestions });
   };
 
   // Add pair for matching questions
   const addPair = (questionIndex: number) => {
-    const updatedQuestions = [...quizData.questions];
+    const updatedQuestions = [...quiz.questions];
     const question = updatedQuestions[questionIndex] as MatchingQuestion;
     
     if (question.type !== 'matching') return;
@@ -209,12 +209,12 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
     question.pairs.push({ id: newPairId, left: '', right: '' });
     question.correctPairs.push({ leftId: newPairId, rightId: newPairId });
     
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    setquiz({ ...quiz, questions: updatedQuestions });
   };
 
   // Add item for ordering questions
   const addOrderItem = (questionIndex: number) => {
-    const updatedQuestions = [...quizData.questions];
+    const updatedQuestions = [...quiz.questions];
     const question = updatedQuestions[questionIndex] as OrderingQuestion;
     
     if (question.type !== 'ordering') return;
@@ -223,12 +223,12 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
     question.items.push({ id: newItemId, text: '' });
     question.correctOrder.push(newItemId);
     
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    setquiz({ ...quiz, questions: updatedQuestions });
   };
 
   // Update scale points for Likert scale questions
   const updateScalePoints = (questionIndex: number, points: number) => {
-    const updatedQuestions = [...quizData.questions];
+    const updatedQuestions = [...quiz.questions];
     const question = updatedQuestions[questionIndex] as LikertScaleQuestion;
     
     if (question.type !== 'likertScale') return;
@@ -268,7 +268,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
     question.scaleLabels = defaultLabels[points as keyof typeof defaultLabels] || [];
     question.feedback = newFeedback;
     
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    setquiz({ ...quiz, questions: updatedQuestions });
   };
 
   // Render different question types
@@ -297,18 +297,18 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             label={`Option ${option.id}`}
             value={option.text}
             onChange={(e) => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               (updatedQuestions[qIndex] as MultipleChoiceQuestion).options[oIndex].text = e.target.value;
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             required
           />
           <IconButton
             onClick={() => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               const mcQuestion = updatedQuestions[qIndex] as MultipleChoiceQuestion;
               mcQuestion.options = mcQuestion.options.filter((_, i) => i !== oIndex);
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             disabled={question.options.length <= 2}
           >
@@ -332,9 +332,9 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
           value={question.correctAnswerId}
           label="Correct Answer"
           onChange={(e) => {
-            const updatedQuestions = [...quizData.questions];
+            const updatedQuestions = [...quiz.questions];
             (updatedQuestions[qIndex] as MultipleChoiceQuestion).correctAnswerId = Number(e.target.value);
-            setQuizData({ ...quizData, questions: updatedQuestions });
+            setquiz({ ...quiz, questions: updatedQuestions });
           }}
           required
         >
@@ -359,9 +359,9 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             label="Left Item"
             value={pair.left}
             onChange={(e) => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               (updatedQuestions[qIndex] as MatchingQuestion).pairs[pIndex].left = e.target.value;
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             required
             sx={{ flex: 1 }}
@@ -370,16 +370,16 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             label="Right Item"
             value={pair.right}
             onChange={(e) => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               (updatedQuestions[qIndex] as MatchingQuestion).pairs[pIndex].right = e.target.value;
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             required
             sx={{ flex: 1 }}
           />
           <IconButton
             onClick={() => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               const matchingQuestion = updatedQuestions[qIndex] as MatchingQuestion;
               
               // Remove the pair
@@ -390,7 +390,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
                 cp => cp.leftId !== pair.id
               );
               
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             disabled={question.pairs.length <= 2}
           >
@@ -423,15 +423,15 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             label={`Item ${item.id}`}
             value={item.text}
             onChange={(e) => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               (updatedQuestions[qIndex] as OrderingQuestion).items[iIndex].text = e.target.value;
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             required
           />
           <IconButton
             onClick={() => {
-              const updatedQuestions = [...quizData.questions];
+              const updatedQuestions = [...quiz.questions];
               const orderingQuestion = updatedQuestions[qIndex] as OrderingQuestion;
               
               // Remove the item
@@ -441,7 +441,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
               // Remove from correctOrder
               orderingQuestion.correctOrder = orderingQuestion.correctOrder.filter(id => id !== itemId);
               
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }}
             disabled={question.items.length <= 2}
           >
@@ -469,7 +469,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
           label="Correct Order"
           value={question.correctOrder.join(',')}
           onChange={(e) => {
-            const updatedQuestions = [...quizData.questions];
+            const updatedQuestions = [...quiz.questions];
             const orderQuestion = updatedQuestions[qIndex] as OrderingQuestion;
             
             // Parse the comma-separated values into an array of numbers
@@ -484,7 +484,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             
             if (allValid) {
               orderQuestion.correctOrder = orderInput;
-              setQuizData({ ...quizData, questions: updatedQuestions });
+              setquiz({ ...quiz, questions: updatedQuestions });
             }
           }}
           helperText="Enter the item numbers in the correct order"
@@ -501,9 +501,9 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
         label="Statement to Rate"
         value={question.statement}
         onChange={(e) => {
-          const updatedQuestions = [...quizData.questions];
+          const updatedQuestions = [...quiz.questions];
           (updatedQuestions[qIndex] as LikertScaleQuestion).statement = e.target.value;
-          setQuizData({ ...quizData, questions: updatedQuestions });
+          setquiz({ ...quiz, questions: updatedQuestions });
         }}
         required
         sx={{ mt: 2 }}
@@ -533,10 +533,10 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
               fullWidth
               value={label.label}
               onChange={(e) => {
-                const updatedQuestions = [...quizData.questions];
+                const updatedQuestions = [...quiz.questions];
                 const likertQuestion = updatedQuestions[qIndex] as LikertScaleQuestion;
                 likertQuestion.scaleLabels[lIndex].label = e.target.value;
-                setQuizData({ ...quizData, questions: updatedQuestions });
+                setquiz({ ...quiz, questions: updatedQuestions });
               }}
             />
           </Box>
@@ -557,11 +557,11 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
               placeholder={`Feedback for rating ${key}`}
               value={question.feedback?.[key] || ''}
               onChange={(e) => {
-                const updatedQuestions = [...quizData.questions];
+                const updatedQuestions = [...quiz.questions];
                 const likertQuestion = updatedQuestions[qIndex] as LikertScaleQuestion;
                 if (!likertQuestion.feedback) likertQuestion.feedback = {};
                 likertQuestion.feedback[key] = e.target.value;
-                setQuizData({ ...quizData, questions: updatedQuestions });
+                setquiz({ ...quiz, questions: updatedQuestions });
               }}
             />
           </Box>
@@ -586,8 +586,8 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             <TextField
               fullWidth
               label="Title"
-              value={quizData.title}
-              onChange={(e) => setQuizData({ ...quizData, title: e.target.value })}
+              value={quiz.title}
+              onChange={(e) => setquiz({ ...quiz, title: e.target.value })}
               required
             />
           </Grid>
@@ -597,16 +597,16 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
               label="Description"
               multiline
               rows={3}
-              value={quizData.description}
-              onChange={(e) => setQuizData({ ...quizData, description: e.target.value })}
+              value={quiz.description}
+              onChange={(e) => setquiz({ ...quiz, description: e.target.value })}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               label="Author"
-              value={quizData.author}
-              onChange={(e) => setQuizData({ ...quizData, author: e.target.value })}
+              value={quiz.author}
+              onChange={(e) => setquiz({ ...quiz, author: e.target.value })}
               required
             />
           </Grid>
@@ -614,8 +614,8 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             <TextField
               fullWidth
               label="Category"
-              value={quizData.category}
-              onChange={(e) => setQuizData({ ...quizData, category: e.target.value })}
+              value={quiz.category}
+              onChange={(e) => setquiz({ ...quiz, category: e.target.value })}
               required
             />
           </Grid>
@@ -623,9 +623,9 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             <FormControl fullWidth>
               <InputLabel>Difficulty</InputLabel>
               <Select
-                value={quizData.difficulty}
+                value={quiz.difficulty}
                 label="Difficulty"
-                onChange={(e) => setQuizData({ ...quizData, difficulty: e.target.value })}
+                onChange={(e) => setquiz({ ...quiz, difficulty: e.target.value })}
               >
                 <MenuItem value="Easy">Easy</MenuItem>
                 <MenuItem value="Medium">Medium</MenuItem>
@@ -636,7 +636,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
         </Grid>
 
         {/* Questions Section */}
-        {quizData.questions.map((question, qIndex) => (
+        {quiz.questions.map((question, qIndex) => (
           <Box key={qIndex} sx={{ mt: 4, p: 2, border: '1px solid #ddd', borderRadius: 1 }}>
             {/* Question Header with Delete Button and Type Selector */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -650,7 +650,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
                     onChange={(e) => {
                       // When changing question type, replace the entire question with a new one of the selected type
                       const newType = e.target.value as QuestionType;
-                      const updatedQuestions = [...quizData.questions];
+                      const updatedQuestions = [...quiz.questions];
                       
                       // Create a new question of the selected type
                       let newQuestion: Question;
@@ -724,7 +724,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
                       }
                       
                       updatedQuestions[qIndex] = newQuestion;
-                      setQuizData({ ...quizData, questions: updatedQuestions });
+                      setquiz({ ...quiz, questions: updatedQuestions });
                     }}
                   >
                     <MenuItem value="multipleChoice">Multiple Choice</MenuItem>
@@ -735,7 +735,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
                 </FormControl>
                 <IconButton 
                   onClick={() => deleteQuestion(qIndex)} 
-                  disabled={quizData.questions.length === 1}
+                  disabled={quiz.questions.length === 1}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -747,9 +747,9 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
               label="Question Text"
               value={question.question}
               onChange={(e) => {
-                const updatedQuestions = [...quizData.questions];
+                const updatedQuestions = [...quiz.questions];
                 updatedQuestions[qIndex].question = e.target.value;
-                setQuizData({ ...quizData, questions: updatedQuestions });
+                setquiz({ ...quiz, questions: updatedQuestions });
               }}
               required
               sx={{ mt: 2 }}
@@ -766,7 +766,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={() => addQuestion('multipleChoice')}
-            disabled={quizData.questions.length >= 20}
+            disabled={quiz.questions.length >= 20}
           >
             Add Multiple Choice
           </Button>
@@ -774,7 +774,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={() => addQuestion('matching')}
-            disabled={quizData.questions.length >= 20}
+            disabled={quiz.questions.length >= 20}
           >
             Add Matching
           </Button>
@@ -782,7 +782,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={() => addQuestion('ordering')}
-            disabled={quizData.questions.length >= 20}
+            disabled={quiz.questions.length >= 20}
           >
             Add Ordering
           </Button>
@@ -790,7 +790,7 @@ const CreateQuizForm: React.FC<CreateQuizFormProps> = ({
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={() => addQuestion('likertScale')}
-            disabled={quizData.questions.length >= 20}
+            disabled={quiz.questions.length >= 20}
           >
             Add Likert Scale
           </Button>
