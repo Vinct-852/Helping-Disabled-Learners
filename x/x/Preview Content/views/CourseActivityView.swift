@@ -106,7 +106,8 @@ struct CourseActivityVideoSection: View {
             if activity.videoType == "vr" {
                 print(activity.video_url)
 //                immersiveManager.url = activity.video_url
-                immersiveManager.url = "https://res.cloudinary.com/nowo-ltd/video/upload/v1742954799/visionpropro/Experiment_10__Conductivity_of_Ionic_and_Covalent_Compounds_1_smpun2.mp4"
+//                immersiveManager.url = "https://res.cloudinary.com/nowo-ltd/video/upload/v1742954799/visionpropro/Experiment_10__Conductivity_of_Ionic_and_Covalent_Compounds_1_smpun2.mp4"
+                immersiveManager.url = "https://res.cloudinary.com/nowo-ltd/video/upload/v1738993654/visionpropro/Multivrs_360_Medical_Experience_jvfs3i.mp4"
             }
         }
     }

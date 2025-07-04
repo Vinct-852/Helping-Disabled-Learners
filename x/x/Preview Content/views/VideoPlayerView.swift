@@ -16,7 +16,11 @@ struct VideoPlayerView: UIViewControllerRepresentable {
         controller.player = AVPlayer()
         
         // Replace with a valid URL string pointing to a media resource
-        if let url = URL.init(string: "https://res.cloudinary.com/nowo-ltd/video/upload/v1742954799/visionpropro/Experiment_10__Conductivity_of_Ionic_and_Covalent_Compounds_1_smpun2.mp4") {
+//        if let url = URL.init(string: "https://res.cloudinary.com/nowo-ltd/video/upload/v1742954799/visionpropro/Experiment_10__Conductivity_of_Ionic_and_Covalent_Compounds_1_smpun2.mp4") {
+//            let playerItem = AVPlayerItem.init(url: url)
+//            controller.player?.replaceCurrentItem(with: playerItem)
+//        }
+        if let url = URL.init(string: "https://res.cloudinary.com/nowo-ltd/video/upload/v1738993654/visionpropro/Multivrs_360_Medical_Experience_jvfs3i.mp4") {
             let playerItem = AVPlayerItem.init(url: url)
             controller.player?.replaceCurrentItem(with: playerItem)
         }
