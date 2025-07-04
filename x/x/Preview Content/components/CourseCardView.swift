@@ -9,9 +9,10 @@ import SwiftUI
 
 struct CourseCardView: View {
     let course: Course
+    let coverImage: String?
     var body: some View {
         VStack{
-            AsyncImage(url: URL(string: "https://res.cloudinary.com/nowo-ltd/image/upload/v1738138068/visionpropro/selective-focus-face-young-asian-boy-girl-smile-having-fun-doing-science-experiment-laboratory-classroom-215712293_x4xezg.webp")) { image in
+            AsyncImage(url: URL(string: coverImage ?? "https://res.cloudinary.com/nowo-ltd/image/upload/v1738138068/visionpropro/selective-focus-face-young-asian-boy-girl-smile-having-fun-doing-science-experiment-laboratory-classroom-215712293_x4xezg.webp")) { image in
                     image
                         .resizable()
                         .aspectRatio(16/9, contentMode: .fit)

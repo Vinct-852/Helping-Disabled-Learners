@@ -94,6 +94,12 @@ struct CourseHeaderView: View {
 
 // MARK: - Course Activities View (Reusable Component)
 struct CourseActivitiesView: View {
+    let activityImages = [
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660350/visionpropro/pexels-photo-624063.jpeg_aswzmy.jpg",
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660343/visionpropro/pexels-photo-132477.jpeg_iugmpp.jpg",
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660271/visionpropro/1323080-3840x2160-desktop-4k-science-background-image_p0lzjl.jpg",
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660235/visionpropro/beakers-for-science-with-water_pbfumy.jpg"
+    ]
     let course: Course
     
     var body: some View {
@@ -110,11 +116,11 @@ struct CourseActivitiesView: View {
             ]
             
             LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(course.immersiveSets, id: \.self) { activityId in
+                ForEach(Array(course.immersiveSets.enumerated()), id: \.offset) { index, activityId in
                     Button(action: {
                         NavigationManager.shared.path.append(NavigationDestination.courseActivity(activityId: activityId))
                     }){
-                        CourseActivityCardView(activityId: activityId)
+                        CourseActivityCardView(activityId: activityId, coverImage: activityImages[index % activityImages.count])
                     }
                     .buttonStyle(PlainButtonStyle())
                     .buttonBorderShape(.roundedRectangle(radius: 12))

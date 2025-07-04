@@ -24,29 +24,8 @@ struct CoursesView: View {
                         })
                     } else {
                         Jumbotron()
-                        VStack {
-                            let columns = [
-                                GridItem(.flexible(), spacing: 32),
-                                GridItem(.flexible(), spacing: 32),
-                                GridItem(.flexible(), spacing: 32)
-                            ]
-                            
-                            LazyVGrid(columns: columns, spacing: 20) {
-                                ForEach(viewModel.courses, id: \.self) { course in
-                                    Button(action: {
-                                        NavigationManager.shared.path.append(NavigationDestination.singleCourse(courseCode: course.courseCode))
-                                    }){
-                                        CourseCardView(course: course)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                    .buttonBorderShape(.roundedRectangle(radius: 0))
-                                }
-                            }
-                            .padding()
-                        }
-                        .padding(32)
-                        .background(.black.opacity(0.20))
-                        .cornerRadius(24)
+                        
+                        CoursesGridView(courses: viewModel.courses)
                         
                         Spacer()
                     }
@@ -58,8 +37,43 @@ struct CoursesView: View {
             }
         }
         .task {
-            await viewModel.fetchAllCourses(studentId: auth.currentUser?._id ?? "")
+            await viewModel.fetchAllCourses(studentId: auth.currentUser?._id ?? "xxx")
         }
+    }
+}
+
+struct CoursesGridView: View {
+    let courses: [Course]
+    let courseImages = [
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660350/visionpropro/pexels-photo-624063.jpeg_aswzmy.jpg",
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660343/visionpropro/pexels-photo-132477.jpeg_iugmpp.jpg",
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660271/visionpropro/1323080-3840x2160-desktop-4k-science-background-image_p0lzjl.jpg",
+        "https://res.cloudinary.com/nowo-ltd/image/upload/v1742660235/visionpropro/beakers-for-science-with-water_pbfumy.jpg"
+    ]
+    var body: some View {
+        VStack {
+            let columns = [
+                GridItem(.flexible(), spacing: 32),
+                GridItem(.flexible(), spacing: 32),
+                GridItem(.flexible(), spacing: 32)
+            ]
+            
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(Array(courses.enumerated()), id: \.offset) { index, course in
+                    Button(action: {
+                        NavigationManager.shared.path.append(NavigationDestination.singleCourse(courseCode: course.courseCode))
+                    }){
+                        CourseCardView(course: course, coverImage: courseImages[index % courseImages.count])
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .buttonBorderShape(.roundedRectangle(radius: 0))
+                }
+            }
+            .padding()
+        }
+        .padding(32)
+        .background(.black.opacity(0.20))
+        .cornerRadius(24)
     }
 }
 
